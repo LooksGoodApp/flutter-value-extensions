@@ -1,4 +1,3 @@
-publish_to: "none"
 name: value_extensions
 description: Set of extensions on ValueNotifier that allows to use it as Streams in the Rx way.
 version: 0.0.1
