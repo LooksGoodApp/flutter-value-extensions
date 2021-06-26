@@ -4,12 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:value_extensions/value_extensions.dart';
 
 class StateObject {
+  /// Object main dispose bag.
   final _disposeBag = DisposeBag();
 
+  /// Base private notifier that every other derives its value from.
   final _counter = ValueNotifier(0);
+
+  /// Derived notifiers through [map()] extension
   late final ValueNotifier<Color> counterColor;
   late final ValueNotifier<String> stringCounterValue;
 
+  /// Base stream for conversion demonstration
+  final _timer = Stream.periodic(Duration(seconds: 1), (second) => second);
+
+  /// Converted stream
+  late final ValueNotifier<int> secondsPassed;
+
+  /// Derived subscription using [where()] and [subscribe()] extensions
   late final Subscription evenPrintSubscription;
 
   StateObject() {
@@ -22,9 +33,10 @@ class StateObject {
     stringCounterValue =
         _counter.map((value) => value.toString()).disposedBy(_disposeBag);
 
-    evenPrintSubscription = _counter
-        .where((value) => value.isEven)
-        .subscribe(print);
+    secondsPassed = _timer.extractValue(initial: 0).disposedBy(_disposeBag);
+
+    evenPrintSubscription =
+        _counter.where((value) => value.isEven).subscribe(print);
   }
 
   void increment() => _counter.set((value) => value + 1);
@@ -72,6 +84,10 @@ class CounterScreenState extends State {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              state.secondsPassed.bind(
+                (seconds) => Text("Seconds passed: $seconds"),
+              ),
+              SizedBox(height: 100),
               DisposableBuilder(
                 builder: (context, disposeBag) => state.stringCounterValue
                     .parallelWith(state.counterColor)

@@ -1,9 +1,12 @@
 library value_extensions;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Base
 part 'src/set.dart';
+part 'src/extract_value.dart';
 part 'src/subscribe.dart';
 part 'src/dispose_bag.dart';
 // Transformers
