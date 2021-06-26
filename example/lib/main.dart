@@ -1,22 +1,34 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:value_extensions/value_extensions.dart';
 
 class StateObject {
   final _disposeBag = DisposeBag();
 
-  final counterValue = ValueNotifier(0);
-  late final ValueNotifier<int> evenCounterValue;
+  final _counter = ValueNotifier(0);
+  late final ValueNotifier<Color> counterColor;
   late final ValueNotifier<String> stringCounterValue;
 
   late final Subscription evenPrintSubscription;
 
   StateObject() {
-    counterValue.disposedBy(_disposeBag);
-    evenCounterValue =
-        counterValue.where((value) => value.isEven).disposedBy(_disposeBag);
-    stringCounterValue = counterValue.map((value) => value.toString());
-    evenPrintSubscription = evenCounterValue.subscribe(print);
+    _counter.disposedBy(_disposeBag);
+
+    counterColor = _counter
+        .map((value) => value.isEven ? Colors.red : Colors.blue)
+        .disposedBy(_disposeBag);
+
+    stringCounterValue =
+        _counter.map((value) => value.toString()).disposedBy(_disposeBag);
+
+    evenPrintSubscription = _counter
+        .where((value) => value.isEven)
+        .disposedBy(_disposeBag)
+        .subscribe(print);
   }
+
+  void increment() => _counter.set((value) => value + 1);
 
   void dispose() {
     if (!evenPrintSubscription.isCanceled) evenPrintSubscription.cancel();
@@ -41,19 +53,39 @@ class Home extends StatelessWidget {
       );
 }
 
-class CounterScreen extends StatelessWidget {
+class CounterScreen extends StatefulWidget {
+  @override
+  CounterScreenState createState() => CounterScreenState();
+}
+
+class CounterScreenState extends State {
   final state = StateObject();
+
+  @override
+  void dispose() {
+    state.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              state.stringCounterValue.bind(
-                (value) => Text(value),
+              DisposableBuilder(
+                builder: (context, disposeBag) => state.stringCounterValue
+                    .parallelWith(state.counterColor)
+                    .disposedBy(disposeBag)
+                    .bind(
+                      (value) => Text(
+                        value.first,
+                        style: TextStyle(color: value.second),
+                      ),
+                    ),
               ),
               OutlinedButton(
-                onPressed: () => state.counterValue.value++,
+                onPressed: state.increment,
                 child: Text("Increment"),
               ),
               OutlinedButton(
@@ -61,10 +93,7 @@ class CounterScreen extends StatelessWidget {
                 child: Text("Cancel print"),
               ),
               OutlinedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  state.dispose();
-                },
+                onPressed: Navigator.of(context).pop,
                 child: Text("Navigate back"),
               ),
             ],
