@@ -14,7 +14,7 @@ Controllers, Streams, Sinks, Sync/Async variations, broadcast/not broadcast stre
 
 ## Getting started 
 
-Down are listed all extensions with the use cases. For further information, visit API Reference or the Example;
+Down are listed all extensions with the use cases. For further information, visit API Reference or the Example.
 
 ## Core extensions
 
@@ -22,7 +22,7 @@ Those extensions provide base functionality: creating, setting, subscribing and 
 
 ### Set
 
-`.set((current) => ...)` extension provides a better API for setting Notifiers.
+`.set((current) => ...)` extension provides a better API for setting Notifiers' value.
 
 Consider this example:
 
@@ -42,12 +42,12 @@ ValueNotifiers provide subscription functionality out of the box, but it is a bi
 final subscription = someValueNotifier.subscribe((value) => print(value));
 
 print(subscription.isCanceled); // Prints 'false'
-someValueNotifier.set((current) => 10); // Prints 10
+someValueNotifier.set((_) => 10); // Prints 10
 
 subscription.cancel()
 
 print(subscription.isCanceled); // Prints 'true'
-someValueNotifier.set((current) => 100); // Does not print
+someValueNotifier.set((_) => 100); // Does not print
 ```
 
 ### Extract value
@@ -55,7 +55,8 @@ someValueNotifier.set((current) => 100); // Does not print
 Sometimes, there is a need to convert a `Stream` to a `ValueNotifier`. This extension does exactly that.
 
 ```dart
-final secondsPassed = Stream.periodic(Duration(seconds: 1), (second) => second).extractValue(initial: 0);
+final stream = Stream.periodic(Duration(seconds: 1), (second) => second);
+final secondsPassed = stream.extractValue(initial: 0);
 ```
 
 ### Dispose
@@ -76,18 +77,84 @@ final disposeBag = DisposeBag();
 final intNotifier = ValueNotifier(0).disposedBy(disposeBag);
 final stringNotifier = ValueNotifier('Hello, Wold!').disposedBy(disposeBag);
 
-disposeBag.clear(); // Disposes notifiers in reverse order of being added: stringNotifier -> intNotifier.
+// Disposes notifiers in reverse order of being added: 
+// stringNotifier -> intNotifier.
+disposeBag.clear(); 
 ```
 
 ## Transformers
 
-
+Next section focuses on transformation of the Notifiers. They implement the Iterator pattern and copy Stream's methods, so when base Notifier changes – derived Notifiers will change too.
 
 ### Map
+
+Creates a new ValueNotifier, deriving its value from the base one using the transform function.
+
+```dart
+final stringNotifier = ValueNotifier('Hello');
+final lengthNotifier = stringNotifier.map((value) => value.length); // 5
+stringNotifier.set((current) => current + ', World!'); // lengthNotifier value becomes 13
+```
+
 ### Flat map
+
+Works as a regular `.map()`, but takes a function that returns a ValueNotifier and "flattens" the result. 
+
+So instead of ValueNotifier\<ValueNotifier\<T\>\>, it becomes a regular ValueNotifier\<T\>.
+
+```dart
+final intNotifier = ValueNotifier(0);
+final stringNotifier = ValueNotifier('Hello!');
+
+final isShowingInt = ValueNotifier(true);
+
+final currentNotifier = isShowingInt.flatMap((isInt) => isInt ? intNotifier : stringNotifier);
+```
+
 ### Where
+
+Creates a new Notifier by filtering base Notifier's values not including the first one. 
+
+```dart
+final intNotifier = ValueNotifier(1);
+
+final evenNotifier = intNotifier.where((value) => value.isEven); // 1
+final oddNotifier = intNotifier.where((value) => value.isOdd); // 1
+
+// evenNotifier: 2
+// oddNotifier: 1
+intNotifier.set((value) => value + 1);
+```
+
 ### Combine latest
+
+Creates a new Notifier by combining its value with `other`'s value and feeding the pair to the transform function.
+
+```dart
+final stringNotifier = ValueNotifier('Flutter');
+final boolNotifier = ValueNotifier(false);
+
+final textNotifier = stringNotifier.combineLatest<bool>(
+  boolNotifier, 
+  (stringValue, boolValue) => boolValue ? stringValue.toUpperCase() : stringValue,
+); // Flutter
+
+boolNotifier.set((_) => true); // textNotifier value becomes FLUTTER
+```
+
 ### Parallel with
+
+Wrapper around the `.combineLatest(...)` extension. Packs latest values of the Notifiers in a tuple. Useful in UI to avoid nestings.
+
+```dart
+final intNotifier = ValueNotifier(0);
+final boolNotifier = ValueNotifier(false);
+
+final paralleledNotifier = intNotifier.parallelWith(boolNotifier); // (0, false)
+
+intNotifier.set((current) => current + 1); // paralleledNotifier becomes (1, false)
+boolNotifier.set((_) => true); // paralleledNotifier becomes (1, true)
+```
 
 ## UI integrations
 
