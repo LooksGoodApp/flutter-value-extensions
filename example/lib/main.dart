@@ -77,9 +77,9 @@ class CounterScreenState extends State {
                     .parallelWith(state.counterColor)
                     .disposedBy(disposeBag)
                     .bind(
-                      (value) => Text(
-                        value.first,
-                        style: TextStyle(color: value.second),
+                      (text, color) => Text(
+                        text,
+                        style: TextStyle(color: color),
                       ),
                     ),
               ),

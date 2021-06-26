@@ -6,16 +6,16 @@ class _Pair<FirstType, SecondType> {
   _Pair(this.first, this.second);
 }
 
-  /// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a 
-  /// wrapper over the [ValueNotifier.combineLatest] extensions.
-  /// 
-  /// Performance note – this extensions is often used inside UI, and its result
-  /// must be disposed as any other [ValueNotifier]. To avoid memory leaks,
-  /// use [DisposableBuilder] when using this extension.
+/// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a
+/// wrapper over the [ValueNotifier.combineLatest] extensions.
+///
+/// Performance note – this extensions is often used inside UI, and its result
+/// must be disposed as any other [ValueNotifier]. To avoid memory leaks,
+/// use [DisposableBuilder] when using this extension.
 extension Parallel<FirstType> on ValueNotifier<FirstType> {
-  /// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a 
+  /// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a
   /// wrapper over the [ValueNotifier.combineLatest] extensions.
-  /// 
+  ///
   /// Performance note – this extensions is often used inside UI, and its result
   /// must be disposed as any other [ValueNotifier]. To avoid memory leaks,
   /// use [DisposableBuilder] when using this extension.
@@ -24,5 +24,13 @@ extension Parallel<FirstType> on ValueNotifier<FirstType> {
       this.combineLatest(
         other,
         (FirstType first, SecondType second) => _Pair(first, second),
+      );
+}
+
+extension BindParallel<A, B> on ValueNotifier<_Pair<A, B>> {
+  Widget bind(Widget Function(A first, B second) to) =>
+      ValueListenableBuilder<_Pair<A, B>>(
+        valueListenable: this,
+        builder: (_, value, __) => to(value.first, value.second),
       );
 }
