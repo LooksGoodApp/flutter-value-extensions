@@ -17,7 +17,7 @@ class StateObject {
   /// Base stream for conversion demonstration
   final _timer = Stream.periodic(Duration(seconds: 1), (second) => second);
 
-  /// Converted stream
+  /// Converted stream through [extractValue()] extension
   late final ValueNotifier<int> secondsPassed;
 
   /// Derived subscription using [where()] and [subscribe()] extensions
