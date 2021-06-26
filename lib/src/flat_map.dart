@@ -33,11 +33,16 @@ class _FlatMappedValueNotifier<BaseType, DerivedType>
   }
 }
 
+/// Creates a new [ValueNotifier] from the base notifier,
+/// using transform function.
+///
+/// Works like [ValueNotifier.map] but transform function must return another
+/// [ValueNotifier] instead of regular value.
 extension FlatMap<BaseType> on ValueNotifier<BaseType> {
   /// Creates a new [ValueNotifier] from the base notifier,
   /// using transform function.
-  /// 
-  /// Works like [ValueNotifier.map] but transform function must return another 
+  ///
+  /// Works like [ValueNotifier.map] but transform function must return another
   /// [ValueNotifier] instead of regular value.
   _FlatMappedValueNotifier<BaseType, DerivedType> flatMap<DerivedType>(
           _FlatMapTransform<BaseType, DerivedType> transform) =>

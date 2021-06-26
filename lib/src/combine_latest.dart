@@ -32,6 +32,9 @@ class _CombineLatestValueNotifier<FirstType, SecondType, DerivedType>
   }
 }
 
+/// Creates a new [ValueNotifier] from the given two, using the given
+/// transform function, updating its value every time any of the two
+/// base notifiers change.
 extension CombineLatest<FirstType> on ValueNotifier<FirstType> {
   /// Creates a new [ValueNotifier] from the given two, using the given
   /// transform function, updating its value every time any of the two

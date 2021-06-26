@@ -1,5 +1,8 @@
 part of value_extensions;
 
+/// Binds this [ValueNotifier] variable to the given Widget.
+///
+/// This is a wrapper for the [ValueListenableBuilder];
 extension Bind<T> on ValueNotifier<T> {
   /// Binds this [ValueNotifier] variable to the given Widget.
   ///

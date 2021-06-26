@@ -1,6 +1,6 @@
 part of value_extensions;
 
-/// [ValueNotifier] [Subscription] object that can be canceled. 
+/// [ValueNotifier] [Subscription] object that can be canceled.
 abstract class Subscription {
   bool get isCanceled;
   void cancel();
@@ -23,6 +23,8 @@ class _Subscription<T> extends Subscription {
   bool get isCanceled => _isCanceled;
 }
 
+/// Works as [ValueNotifier.addListener], but returns a cancelable
+/// [Subscription] object
 extension Subscribe<T> on ValueNotifier<T> {
   /// Works as [ValueNotifier.addListener], but returns a cancelable
   /// [Subscription] object

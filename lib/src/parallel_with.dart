@@ -6,6 +6,12 @@ class _Pair<FirstType, SecondType> {
   _Pair(this.first, this.second);
 }
 
+  /// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a 
+  /// wrapper over the [ValueNotifier.combineLatest] extensions.
+  /// 
+  /// Performance note – this extensions is often used inside UI, and its result
+  /// must be disposed as any other [ValueNotifier]. To avoid memory leaks,
+  /// use [DisposableBuilder] when using this extension.
 extension Parallel<FirstType> on ValueNotifier<FirstType> {
   /// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a 
   /// wrapper over the [ValueNotifier.combineLatest] extensions.

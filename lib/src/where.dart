@@ -23,13 +23,17 @@ class _FilteredValueNotifier<T> extends ValueNotifier<T> {
   }
 }
 
+/// Creates a new [ValueNotifier] that filters base notifiers' values with
+/// the given filter function.
+///
+/// Note – new notifiers' value is assigned without using the filter function
+/// to avoid nulls.
 extension Where<T> on ValueNotifier<T> {
   /// Creates a new [ValueNotifier] that filters base notifiers' values with
   /// the given filter function.
-  /// 
+  ///
   /// Note – new notifiers' value is assigned without using the filter function
   /// to avoid nulls.
   _FilteredValueNotifier<T> where(bool Function(T value) filter) =>
       _FilteredValueNotifier(this, filter);
 }
-

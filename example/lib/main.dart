@@ -24,7 +24,6 @@ class StateObject {
 
     evenPrintSubscription = _counter
         .where((value) => value.isEven)
-        .disposedBy(_disposeBag)
         .subscribe(print);
   }
 
