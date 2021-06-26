@@ -158,5 +158,49 @@ boolNotifier.set((_) => true); // paralleledNotifier becomes (1, true)
 
 ## UI integrations
 
+The last section focuses on the UI integrations.
+
+Both Streams and ValueNotifiers is intended to be displayed in the UI through Builders. Only problem is – builders are massive. To "bind" a single observable variable to the UI, one must type around 86 characters. Value Extensions reduces this number to around 23 characters, or almost 4 times less!
+
 ### Bind
+
+To bind a ValueNotifier to the UI, the `.bind(...)` extension is used. 
+
+Consider these two examples: using `ValueListenableBuilder` and `.bind(...)`.
+
+```dart
+ValueListenableBuilder(
+  valueListenable: nameNotifier,
+  builder: (context, name, child) => Text("Hello, $name!"),
+)
+```
+
+```dart 
+nameNotifier.bind(
+  (name) => Text("Hello, $name!"),
+)
+```
+
+The `.bind(...)` extension uses `ValueListenableBuilder` inside, you have the same efficient targeted rebuilds, but with less code to type.
+
 ### Disposable builder
+
+Sometimes, it is convenient to create a new `ValueNotifier` in the UI, combining notifiers from different state objects. And to be sure that resources are being released properly, the `DisposableBuilder` can be used.
+
+The most frequent use of the `DisposableBuilder` is in combination with the `parallelWith(...)` extension. Example usage would look like this.
+
+```dart 
+DisposableBuilder(
+  builder: (context, disposeBag) => state.stringCounterValue
+      .parallelWith(state.counterColor)
+      .disposedBy(disposeBag)
+      .bind(
+        (text, color) => Text(
+          text,
+          style: TextStyle(color: color),
+        ),
+      ),
+),
+```
+
+Note – the `.bind(...)` extension used on the Notifier obtained from the `.parallelWith(...)` extension automatically destructures it's value in the Widget callback.
