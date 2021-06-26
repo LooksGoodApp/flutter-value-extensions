@@ -10,7 +10,7 @@ Generally, there are two PubSub approaches for UI in Flutter: `Stream`s and `Val
 
 Controllers, Streams, Sinks, Sync/Async variations, broadcast/not broadcast streams. That is a lot to type and to keep in mind.
 
-`ValueNotifier`s, on the other hand, are a lot simpler, lighter and need less code. But they lack Stream's power – it's hard to make derived notifiers, dispose them automatically, subscribe and cancel subscriptions and integrated them without crazy nesting in UI. **Value Extensions** solves this problem.
+`ValueNotifier`s, on the other hand, are a lot simpler, lighter, and need less code. But they lack Stream's power – it's hard to make derived notifiers, dispose of them automatically, subscribe and cancel subscriptions and integrated them without crazy nesting in UI. **Value Extensions** solves this problem.
 
 ## Getting started 
 
@@ -18,7 +18,7 @@ Down are listed all extensions with the use cases. For further information, visi
 
 ## Core extensions
 
-Those extensions provide base functionality: creating, setting, subscribing and disposing of Notifiers.
+Those extensions provide base functionality: creating, setting, subscribing, and disposing of Notifiers.
 
 ### Set
 
@@ -36,7 +36,7 @@ someNotifier.set((current) => current * 10);
 
 ### Subscribe
 
-ValueNotifiers provide subscription functionality out of the box, but it is a bit tricky to get information about their status and cancel them. This extension provides functionality for this cases.
+ValueNotifiers provide subscription functionality out of the box, but it is a bit tricky to get information about their status and cancel them. This extension provides functionality for these cases.
 
 ```dart
 final subscription = someValueNotifier.subscribe((value) => print(value));
@@ -61,11 +61,11 @@ final secondsPassed = stream.extractValue(initial: 0);
 
 ### Dispose
 
-Just as `Streams`, `ValueNotifiers`s need to be properly disposed in order for resources to be released. Regular approach usually would look like a dispose method with a bunch of `someNotifier.dispose()`s in it in the revers order of their creation.
+Just as `Streams`, `ValueNotifiers`s need to be properly disposed in order for resources to be released. Regular approach usually would look like a dispose method with a bunch of `someNotifier.dispose()`s in it in the reverse order of their creation.
 
 Value Extensions provide a more pleasant way of doing so – `DisposeBag` and `.disposedBy(disposeBag)`.
 
-`DisposeBag` is a simple container that stores notifiers that need to be disposed. It has a single method – `clear()` that disposes every service that was added to it in a reverse order.
+`DisposeBag` is a simple container that stores notifiers that need to be disposed. It has a single method – `clear()` that disposes every service that was added to it in reverse order.
 
 `.disposedBy(disposeBag)` is an extension that adds a `ValueNotifier` to an instance of a `DisposeBag`.
 
@@ -84,7 +84,7 @@ disposeBag.clear();
 
 ## Transformers
 
-Next section focuses on transformation of the Notifiers. They implement the Iterator pattern and copy Stream's methods, so when base Notifier changes – derived Notifiers will change too.
+The next section focuses on the transformation of the Notifiers. They implement the Iterator pattern and copy Stream's methods, so when base Notifier changes – derived Notifiers will change too.
 
 ### Map
 
@@ -113,7 +113,7 @@ final currentNotifier = isShowingInt.flatMap((isInt) => isInt ? intNotifier : st
 
 ### Where
 
-Creates a new Notifier by filtering base Notifier's values not including the first one. 
+Creates a new Notifier by filtering base Notifier's values, not including the first one. 
 
 ```dart
 final intNotifier = ValueNotifier(1);
@@ -158,9 +158,9 @@ boolNotifier.set((_) => true); // paralleledNotifier becomes (1, true)
 
 ## UI integrations
 
-The last section focuses on the UI integrations.
+The last section focuses on UI integrations.
 
-Both Streams and ValueNotifiers is intended to be displayed in the UI through Builders. Only problem is – builders are massive. To "bind" a single observable variable to the UI, one must type around 86 characters. Value Extensions reduces this number to around 23 characters, or almost 4 times less!
+Both Streams and ValueNotifiers are intended to be displayed in the UI through Builders. The only problem is – builders are massive. To "bind" a single observable variable to the UI, one must type around 86 characters. Value Extensions reduces this number to around 23 characters or almost 4 times less!
 
 ### Bind
 
@@ -203,4 +203,4 @@ DisposableBuilder(
 ),
 ```
 
-Note – the `.bind(...)` extension used on the Notifier obtained from the `.parallelWith(...)` extension automatically destructures it's value in the Widget callback.
+Note – the `.bind(...)` extension used on the Notifier obtained from the `.parallelWith(...)` extension automatically destructures its value in the Widget callback.
