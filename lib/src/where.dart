@@ -12,7 +12,7 @@ class _FilteredValueNotifier<T> extends WatcherNotifier<T> {
 
   void _considerSetting() {
     final baseValue = _baseNotifier.value;
-    if (_filter(baseValue)) super.value = baseValue;
+    if (_filter(baseValue)) value = baseValue;
   }
 
   void _listener(T _) {

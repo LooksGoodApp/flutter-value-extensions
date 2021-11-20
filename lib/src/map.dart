@@ -14,7 +14,7 @@ class _MappedValueNotifier<BaseType, DerivedType>
     _mapSubscription = _baseNotifier.subscribe(_listener);
   }
 
-  void _listener(BaseType baseValue) => set((_) => _transform(baseValue));
+  void _listener(BaseType baseValue) => set(_transform(baseValue));
 
   @override
   void dispose() {

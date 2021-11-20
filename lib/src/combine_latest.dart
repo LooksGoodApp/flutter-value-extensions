@@ -22,7 +22,7 @@ class _CombineLatestValueNotifier<FirstType, SecondType, DerivedType>
   }
 
   void _listener(FirstType first, SecondType second) =>
-      set((_) => _transform(first, second));
+      set(_transform(first, second));
 
   @override
   void dispose() {

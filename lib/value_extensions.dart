@@ -10,7 +10,6 @@ import 'package:value_extensions/src/internal/watcher_notifier.dart';
 part 'src/set.dart';
 part 'src/extract_value.dart';
 part 'src/subscribe.dart';
-part 'src/dispose_bag.dart';
 // Transformers
 part 'src/map.dart';
 part 'src/flat_map.dart';
@@ -19,4 +18,3 @@ part 'src/combine_latest.dart';
 part 'src/parallel_with.dart';
 // UI
 part 'src/bind.dart';
-part 'src/disposable_builder.dart';

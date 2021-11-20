@@ -35,9 +35,11 @@ class _Subscription<T> extends Subscription {
   }
 
   void cancel() {
-    _unsubscribe();
-    _isCanceled = true;
-    _isActive = false;
+    if (!_isCanceled) {
+      _unsubscribe();
+      _isCanceled = true;
+      _isActive = false;
+    }
   }
 
   void pause() {

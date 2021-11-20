@@ -19,10 +19,9 @@ class _FlatMappedValueNotifier<BaseType, DerivedType>
 
   void _listener(BaseType baseValue) {
     _currentValue = _transform(baseValue);
-    set((_) => _currentValue!.value);
+    set(_currentValue!.value);
     _currentSubscription?.cancel();
-    _currentSubscription =
-        _currentValue!.subscribe((value) => set((_) => value));
+    _currentSubscription = _currentValue!.subscribe((value) => set(value));
   }
 
   @override

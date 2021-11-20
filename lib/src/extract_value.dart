@@ -8,7 +8,7 @@ class _ExtractedValueNotifier<T> extends ValueNotifier<T> {
     _streamSubscription = stream.listen(_listener);
   }
 
-  void _listener(T value) => set((_) => value);
+  void _listener(T value) => set(value);
 
   @override
   void dispose() {

@@ -1,49 +1,37 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:value_extensions/value_extensions.dart';
 
 class StateObject {
-  /// Object main dispose bag.
-  final _disposeBag = DisposeBag();
-
   /// Base private notifier that every other derives its value from.
   final _counter = ValueNotifier(0);
 
-  /// Derived notifiers through [map()] extension
-  late final ValueNotifier<Color> counterColor;
-  late final ValueNotifier<String> stringCounterValue;
-
   /// Base stream for conversion demonstration
   final _timer = Stream.periodic(Duration(seconds: 1), (second) => second);
-
-  /// Converted stream through [extractValue()] extension
-  late final ValueNotifier<int> secondsPassed;
 
   /// Derived subscription using [where()] and [subscribe()] extensions
   late final Subscription evenPrintSubscription;
 
   StateObject() {
-    _counter.disposedBy(_disposeBag);
-
-    counterColor = _counter
-        .map((value) => value.isEven ? Colors.red : Colors.blue)
-        .disposedBy(_disposeBag);
-
-    stringCounterValue =
-        _counter.map((value) => value.toString()).disposedBy(_disposeBag);
-
-    secondsPassed = _timer.extractValue(initial: 0).disposedBy(_disposeBag);
-
     evenPrintSubscription =
         _counter.where((value) => value.isEven).subscribe(print);
   }
 
-  void increment() => _counter.set((value) => value + 1);
+  ValueListenable<Color> get counterColor =>
+      _counter.map((value) => value.isEven ? Colors.red : Colors.blue);
+
+  ValueNotifier<String> get stringCounterValue =>
+      _counter.map((value) => value.toString());
+
+  ValueListenable<int> get secondsPassed => _timer.extractValue(initial: 0);
+
+  void increment() => _counter.update((value) => value + 1);
 
   void dispose() {
-    if (!evenPrintSubscription.isCanceled) evenPrintSubscription.cancel();
-    _disposeBag.clear();
+    evenPrintSubscription.cancel();
+    _counter.dispose();
     print("Disposed $this");
   }
 }
