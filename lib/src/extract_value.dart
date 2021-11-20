@@ -2,12 +2,15 @@ part of value_extensions;
 
 class _ExtractedValueNotifier<T> extends WatcherNotifier<T> {
   StreamSubscription<T>? _streamSubscription;
+  var _streamDone = false;
+  var _subscribedOnDone = false;
+
   final Stream<T> _stream;
 
   _ExtractedValueNotifier(this._stream, T initialValue) : super(initialValue);
 
   void _subscribe() {
-    _streamSubscription = _stream.listen(set);
+    _streamSubscription = _stream.listen(set, onDone: () => _streamDone = true);
   }
 
   void _unsubscribe() {
@@ -18,7 +21,7 @@ class _ExtractedValueNotifier<T> extends WatcherNotifier<T> {
   @override
   void onListened() {
     super.onListened();
-    if (_streamSubscription == null) _subscribe();
+    if (_streamSubscription == null && !_streamDone) _subscribe();
   }
 
   @override
@@ -29,9 +32,12 @@ class _ExtractedValueNotifier<T> extends WatcherNotifier<T> {
 
   @override
   T get value {
-    if (_streamSubscription == null) {
+    if (_streamSubscription == null && !_subscribedOnDone) {
       _subscribe();
-      Future(_unsubscribe);
+      Future(() {
+        _unsubscribe();
+        if (_streamDone) _subscribedOnDone = true;
+      });
     }
     return super.value;
   }
