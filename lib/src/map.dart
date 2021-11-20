@@ -27,6 +27,7 @@ class _MappedValueNotifier<BaseType, DerivedType>
 extension Map<BaseType> on ValueNotifier<BaseType> {
   /// Creates a new [ValueNotifier] using the [transform] function
   _MappedValueNotifier<BaseType, DerivedType> map<DerivedType>(
-          _MapTransform<BaseType, DerivedType> transform) =>
+    _MapTransform<BaseType, DerivedType> transform,
+  ) =>
       _MappedValueNotifier(this, transform);
 }

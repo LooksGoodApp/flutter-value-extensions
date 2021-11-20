@@ -22,7 +22,7 @@ class StateObject {
   ValueListenable<Color> get counterColor =>
       _counter.map((value) => value.isEven ? Colors.red : Colors.blue);
 
-  ValueNotifier<String> get stringCounterValue =>
+  ValueListenable<String> get stringCounterValue =>
       _counter.map((value) => value.toString());
 
   ValueListenable<int> get secondsPassed => _timer.extractValue(initial: 0);

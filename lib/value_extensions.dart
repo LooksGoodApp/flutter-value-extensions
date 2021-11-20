@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:value_extensions/src/internal/single_subscription_watcher_mixin.dart';
 import 'package:value_extensions/src/internal/watcher_notifier.dart';
 
 // Base

@@ -1,41 +1,16 @@
 part of value_extensions;
 
-class _FilteredValueNotifier<T> extends WatcherNotifier<T> {
-  final ValueListenable<T> _baseNotifier;
+class _FilteredValueNotifier<T>
+    extends SingleSubscriptionWatcherNotifier<T, T> {
+  final ValueListenable<T> baseNotifier;
   final bool Function(T value) _filter;
-  late final Subscription _whereSubscription;
 
-  _FilteredValueNotifier(this._baseNotifier, this._filter)
-      : super(_baseNotifier.value) {
-    _whereSubscription = _baseNotifier.subscribe(_listener, subscribe: false);
-  }
+  _FilteredValueNotifier(this.baseNotifier, this._filter)
+      : super(baseNotifier.value);
 
-  void _considerSetting() {
-    final baseValue = _baseNotifier.value;
+  void updateValue() {
+    final baseValue = baseNotifier.value;
     if (_filter(baseValue)) value = baseValue;
-  }
-
-  void _listener(T _) {
-    _considerSetting();
-  }
-
-  @override
-  void onListened() {
-    super.onListened();
-    _considerSetting();
-    _whereSubscription.pause();
-  }
-
-  @override
-  void onForgotten() {
-    super.onForgotten();
-    _whereSubscription.pause();
-  }
-
-  @override
-  T get value {
-    if (!hasListeners) _considerSetting();
-    return super.value;
   }
 }
 
