@@ -4,10 +4,10 @@ import 'package:value_extensions/value_extensions.dart';
 
 abstract class SingleSubscriptionWatcherNotifier<B, T>
     extends WatcherNotifier<T> {
-  late final Subscription subscription;
+  late final Subscription _subscription;
 
   SingleSubscriptionWatcherNotifier(T value) : super(value) {
-    subscription = baseNotifier.subscribe((_) => updateValue());
+    _subscription = baseNotifier.subscribe((_) => updateValue());
   }
 
   void updateValue();
@@ -17,13 +17,13 @@ abstract class SingleSubscriptionWatcherNotifier<B, T>
   void onListened() {
     super.onListened();
     updateValue();
-    subscription.pause();
+    _subscription.pause();
   }
 
   @override
   void onForgotten() {
     super.onForgotten();
-    subscription.pause();
+    _subscription.pause();
   }
 
   @override

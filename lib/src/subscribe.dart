@@ -34,26 +34,27 @@ class _Subscription<T> extends Subscription {
     _listenable.removeListener(_listener);
   }
 
-  void cancel() {
-    if (!_isCanceled) {
-      _unsubscribe();
-      _isCanceled = true;
-      _isActive = false;
-    }
+  void _ifNotCanceled(VoidCallback body) {
+    if (!_isCanceled) body();
   }
 
-  void pause() {
-    if (_isPaused) {
-      _isPaused = false;
-      _isActive = true;
-      _subscribe();
-    } else {
-      _isPaused = true;
-      _isActive = false;
-      _unsubscribe();
-    }
-  }
+  void cancel() => _ifNotCanceled(() {
+        _unsubscribe();
+        _isCanceled = true;
+        _isActive = false;
+      });
 
+  void pause() => _ifNotCanceled(() {
+        if (_isPaused) {
+          _isPaused = false;
+          _isActive = true;
+          _subscribe();
+        } else {
+          _isPaused = true;
+          _isActive = false;
+          _unsubscribe();
+        }
+      });
   bool get isCanceled => _isCanceled;
   bool get isPaused => _isPaused;
   bool get isActive => _isActive;
