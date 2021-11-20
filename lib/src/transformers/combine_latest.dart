@@ -1,9 +1,6 @@
 part of value_extensions;
 
-typedef BinaryTransform<A, B, C> = C Function(A first, B second);
-
-class _CombineLatestValueNotifier<A, B, C>
-    extends SubscriberWatcherNotifier<C> {
+class _CombineLatestValueNotifier<A, B, C> extends SubscriberNotifier<C> {
   final ValueListenable<A> _first;
   final ValueListenable<B> _second;
   final BinaryTransform<A, B, C> _transform;

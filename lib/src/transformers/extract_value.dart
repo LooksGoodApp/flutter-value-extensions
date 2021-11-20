@@ -1,6 +1,7 @@
 part of value_extensions;
 
-class _ExtractedValueNotifier<T> extends WatcherNotifier<T> {
+class _ExtractedValueNotifier<T> extends ValueNotifier<T>
+    with WatcherNotifierMixin<T> {
   StreamSubscription<T>? _streamSubscription;
   var _streamDone = false;
   var _subscribedOnDone = false;

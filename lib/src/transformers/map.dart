@@ -1,6 +1,6 @@
 part of value_extensions;
 
-class _MappedValueNotifier<A, B> extends SubscriberWatcherNotifier<B> {
+class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
   final ValueListenable<A> listenable;
   final B Function(A value) _transform;
 

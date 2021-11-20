@@ -4,8 +4,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:value_extensions/src/internal/subscriber_notifier.dart';
 import 'package:value_extensions/src/internal/subscriber_watcher_mixin.dart';
-import 'package:value_extensions/src/internal/watcher_notifier.dart';
+import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
+import 'package:value_extensions/src/typedefs.dart';
 
 // Base
 part 'src/utility/set.dart';

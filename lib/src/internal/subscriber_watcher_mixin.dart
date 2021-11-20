@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:value_extensions/src/internal/watcher_notifier.dart';
+import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
 import 'package:value_extensions/value_extensions.dart';
 
-abstract class SubscriberWatcherNotifier<T> extends WatcherNotifier<T> {
-  SubscriberWatcherNotifier(T value) : super(value);
-
+mixin SubscriberWatcherMixin<T> on WatcherNotifierMixin<T> {
   T computeValue();
   Listenable get listenable;
 

@@ -1,6 +1,6 @@
 part of value_extensions;
 
-class _FilteredValueNotifier<T> extends SubscriberWatcherNotifier<T> {
+class _FilteredValueNotifier<T> extends SubscriberNotifier<T> {
   final ValueListenable<T> listenable;
   final bool Function(T value) _filter;
 

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-abstract class WatcherNotifier<T> extends ValueNotifier<T> {
+mixin WatcherNotifierMixin<T> on ValueNotifier<T> {
   final _listenersSet = <VoidCallback>{};
-
-  WatcherNotifier(T value) : super(value);
 
   @override
   void addListener(VoidCallback listener) {
