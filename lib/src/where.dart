@@ -10,7 +10,7 @@ class _FilteredValueNotifier<T>
 
   void updateValue() {
     final baseValue = baseNotifier.value;
-    if (_filter(baseValue)) value = baseValue;
+    if (_filter(baseValue)) set(baseValue);
   }
 }
 

@@ -1,33 +1,21 @@
 part of value_extensions;
 
-typedef _MapTransform<BaseType, DerivedType> = DerivedType Function(
-    BaseType value);
-
 class _MappedValueNotifier<BaseType, DerivedType>
-    extends ValueNotifier<DerivedType> {
-  final ValueNotifier<BaseType> _baseNotifier;
-  final _MapTransform<BaseType, DerivedType> _transform;
-  late final Subscription _mapSubscription;
+    extends SingleSubscriptionWatcherNotifier<BaseType, DerivedType> {
+  final ValueListenable<BaseType> baseNotifier;
+  final DerivedType Function(BaseType value) _transform;
 
-  _MappedValueNotifier(this._baseNotifier, this._transform)
-      : super(_transform(_baseNotifier.value)) {
-    _mapSubscription = _baseNotifier.subscribe(_listener);
-  }
+  _MappedValueNotifier(this.baseNotifier, this._transform)
+      : super(_transform(baseNotifier.value));
 
-  void _listener(BaseType baseValue) => set(_transform(baseValue));
-
-  @override
-  void dispose() {
-    _mapSubscription.cancel();
-    super.dispose();
-  }
+  void updateValue() => set(_transform(baseNotifier.value));
 }
 
-/// Creates a new [ValueNotifier] using the [transform] function
-extension Map<BaseType> on ValueNotifier<BaseType> {
-  /// Creates a new [ValueNotifier] using the [transform] function
-  _MappedValueNotifier<BaseType, DerivedType> map<DerivedType>(
-    _MapTransform<BaseType, DerivedType> transform,
+/// Creates a new [ValueListenable] using the [transform] function
+extension MapValueListenableExtensions<BaseType> on ValueListenable<BaseType> {
+  /// Creates a new [ValueListenable] using the [transform] function
+  ValueListenable<DerivedType> map<DerivedType>(
+    DerivedType Function(BaseType value) transform,
   ) =>
       _MappedValueNotifier(this, transform);
 }
