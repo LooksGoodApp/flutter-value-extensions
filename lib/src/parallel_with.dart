@@ -1,35 +1,32 @@
 part of value_extensions;
 
-class _Pair<FirstType, SecondType> {
-  final FirstType first;
-  final SecondType second;
-  _Pair(this.first, this.second);
+class Pair<A, B> {
+  final A first;
+  final B second;
+  const Pair._(this.first, this.second);
 }
 
-/// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a
-/// wrapper over the [ValueNotifier.combineLatest] extensions.
+/// Allows to avoid nesting by paralleling two [ValueListenable]s. This is a
+/// wrapper over the [combineLatest] extensions.
 ///
 /// Performance note – this extensions is often used inside UI, and its result
-/// must be disposed as any other [ValueNotifier]. To avoid memory leaks,
-/// use [DisposableBuilder] when using this extension.
-extension Parallel<FirstType> on ValueNotifier<FirstType> {
-  /// Allows to avoid nesting by paralleling two [ValueNotifiers]. This is a
-  /// wrapper over the [ValueNotifier.combineLatest] extensions.
+/// must be disposed as any other [ValueListenable].
+extension Parallel<A> on ValueListenable<A> {
+  /// Allows to avoid nesting by paralleling two [ValueListenable]s. This is a
+  /// wrapper over the [combineLatest] extensions.
   ///
   /// Performance note – this extensions is often used inside UI, and its result
-  /// must be disposed as any other [ValueNotifier]. To avoid memory leaks,
-  /// use [DisposableBuilder] when using this extension.
-  ValueNotifier<_Pair<FirstType, SecondType>> parallelWith<SecondType>(
-          ValueNotifier<SecondType> other) =>
-      this.combineLatest(
+  /// must be disposed as any other [ValueListenable].
+  ValueListenable<Pair<A, B>> parallelWith<B>(ValueListenable<B> other) =>
+      combineLatest(
         other,
-        (FirstType first, SecondType second) => _Pair(first, second),
+        (first, B second) => Pair._(first, second),
       );
 }
 
-extension BindParallel<A, B> on ValueNotifier<_Pair<A, B>> {
+extension BindParallel<A, B> on ValueListenable<Pair<A, B>> {
   Widget bind(Widget Function(A first, B second) to) =>
-      ValueListenableBuilder<_Pair<A, B>>(
+      ValueListenableBuilder<Pair<A, B>>(
         valueListenable: this,
         builder: (_, value, __) => to(value.first, value.second),
       );

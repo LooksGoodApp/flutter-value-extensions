@@ -1,14 +1,13 @@
 part of value_extensions;
 
-class _MappedValueNotifier<BaseType, DerivedType>
-    extends SingleSubscriptionWatcherNotifier<BaseType, DerivedType> {
-  final ValueListenable<BaseType> baseNotifier;
-  final DerivedType Function(BaseType value) _transform;
+class _MappedValueNotifier<A, B> extends SubscriberWatcherNotifier<B> {
+  final ValueListenable<A> listenable;
+  final B Function(A value) _transform;
 
-  _MappedValueNotifier(this.baseNotifier, this._transform)
-      : super(_transform(baseNotifier.value));
+  _MappedValueNotifier(this.listenable, this._transform)
+      : super(_transform(listenable.value));
 
-  void updateValue() => set(_transform(baseNotifier.value));
+  B computeValue() => _transform(listenable.value);
 }
 
 /// Creates a new [ValueListenable] using the [transform] function

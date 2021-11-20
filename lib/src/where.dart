@@ -1,16 +1,16 @@
 part of value_extensions;
 
-class _FilteredValueNotifier<T>
-    extends SingleSubscriptionWatcherNotifier<T, T> {
-  final ValueListenable<T> baseNotifier;
+class _FilteredValueNotifier<T> extends SubscriberWatcherNotifier<T> {
+  final ValueListenable<T> listenable;
   final bool Function(T value) _filter;
 
-  _FilteredValueNotifier(this.baseNotifier, this._filter)
-      : super(baseNotifier.value);
+  _FilteredValueNotifier(this.listenable, this._filter)
+      : super(listenable.value);
 
-  void updateValue() {
-    final baseValue = baseNotifier.value;
-    if (_filter(baseValue)) set(baseValue);
+  T computeValue() {
+    final baseValue = listenable.value;
+
+    return _filter(baseValue) ? baseValue : super.value;
   }
 }
 
