@@ -1,32 +1,45 @@
 part of value_extensions;
 
-class _FilteredValueNotifier<T> extends ValueNotifier<T> {
-  final ValueNotifier<T> _baseNotifier;
+class _FilteredValueNotifier<T> extends WatcherNotifier<T> {
+  final ValueListenable<T> _baseNotifier;
   final bool Function(T value) _filter;
   late final Subscription _whereSubscription;
 
   _FilteredValueNotifier(this._baseNotifier, this._filter)
       : super(_baseNotifier.value) {
-    _whereSubscription = _baseNotifier.subscribe(_listener);
+    _whereSubscription = _baseNotifier.subscribe(_listener, subscribe: false);
   }
 
-  void _listener(T baseValue) {
-    if (_filter(baseValue)) {
-      value = baseValue;
-    }
+  void _considerSetting() {
+    final baseValue = _baseNotifier.value;
+    if (_filter(baseValue)) super.value = baseValue;
+  }
+
+  void _listener(T _) {
+    _considerSetting();
   }
 
   @override
-  void dispose() {
-    _whereSubscription.cancel();
-    super.dispose();
+  void onListened() {
+    super.onListened();
+    _considerSetting();
+    _whereSubscription.pause();
+  }
+
+  @override
+  void onForgotten() {
+    super.onForgotten();
+    _whereSubscription.pause();
+  }
+
+  @override
+  T get value {
+    if (!hasListeners) _considerSetting();
+    return super.value;
   }
 }
 
-class _FilteredValueNotifierN<T> extends ChangeNotifier
-    implements ValueListenable<T> {}
-
-/// Creates a new [ValueNotifier] that filters base notifiers' values with
+/// Creates a new [ValueListenable] that filters base notifiers' values with
 /// the given filter function.
 ///
 /// Note – new notifiers' value is assigned without using the filter function

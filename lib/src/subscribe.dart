@@ -11,15 +11,19 @@ abstract class Subscription {
 }
 
 class _Subscription<T> extends Subscription {
-  final ValueNotifier _listenable;
+  final ValueListenable _listenable;
   final void Function() _listener;
   bool _isCanceled = false;
-  bool _isPaused = false;
-  late bool _isActive;
+  bool _isPaused;
+  bool _isActive;
 
-  _Subscription(this._listenable, this._listener, {bool subscribe = true}) {
+  _Subscription(
+    this._listenable,
+    this._listener, {
+    required bool subscribe,
+  })  : _isPaused = !subscribe,
+        _isActive = subscribe {
     if (subscribe) _subscribe();
-    _isActive = subscribe;
   }
 
   void _subscribe() {
@@ -55,9 +59,12 @@ class _Subscription<T> extends Subscription {
 
 /// Works as [ValueNotifier.addListener], but returns a cancelable
 /// [Subscription] object
-extension Subscribe<T> on ValueNotifier<T> {
+extension Subscribe<T> on ValueListenable<T> {
   /// Works as [ValueNotifier.addListener], but returns a cancelable
   /// [Subscription] object
-  _Subscription<T> subscribe(void Function(T value) listener) =>
-      _Subscription(this, () => listener(value));
+  _Subscription<T> subscribe(
+    void Function(T value) listener, {
+    bool subscribe = true,
+  }) =>
+      _Subscription(this, () => listener(value), subscribe: subscribe);
 }
