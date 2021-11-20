@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 abstract class WatcherNotifier<T> extends ValueNotifier<T> {
-  var _listeners = 0;
+  final _listenersSet = <VoidCallback>{};
 
   WatcherNotifier(T value) : super(value);
 
   @override
   void addListener(VoidCallback listener) {
-    if (_listeners++ == 0) onListened();
+    if (_listenersSet.isEmpty) onListened();
+    _listenersSet.add(listener);
     super.addListener(listener);
   }
 
   @override
   void removeListener(VoidCallback listener) {
-    if (--_listeners == 0) onForgotten();
+    if (_listenersSet.remove(listener) && _listenersSet.isEmpty) onForgotten();
     super.removeListener(listener);
   }
 
@@ -21,5 +22,5 @@ abstract class WatcherNotifier<T> extends ValueNotifier<T> {
 
   void onForgotten() {}
 
-  bool get hasListeners => _listeners != 0;
+  bool get hasListeners => _listenersSet.isNotEmpty;
 }
