@@ -2,25 +2,55 @@ part of value_extensions;
 
 /// [ValueNotifier] [Subscription] object that can be canceled.
 abstract class Subscription {
-  bool get isCanceled;
   void cancel();
+  void pause();
+
+  bool get isCanceled;
+  bool get isPaused;
+  bool get isActive;
 }
 
 class _Subscription<T> extends Subscription {
   final ValueNotifier _listenable;
   final void Function() _listener;
   bool _isCanceled = false;
+  bool _isPaused = false;
+  late bool _isActive;
 
-  _Subscription(this._listenable, this._listener) {
+  _Subscription(this._listenable, this._listener, {bool subscribe = true}) {
+    if (subscribe) _subscribe();
+    _isActive = subscribe;
+  }
+
+  void _subscribe() {
     _listenable.addListener(_listener);
   }
 
-  void cancel() {
+  void _unsubscribe() {
     _listenable.removeListener(_listener);
+  }
+
+  void cancel() {
+    _unsubscribe();
     _isCanceled = true;
+    _isActive = false;
+  }
+
+  void pause() {
+    if (_isPaused) {
+      _isPaused = false;
+      _isActive = true;
+      _subscribe();
+    } else {
+      _isPaused = true;
+      _isActive = false;
+      _unsubscribe();
+    }
   }
 
   bool get isCanceled => _isCanceled;
+  bool get isPaused => _isPaused;
+  bool get isActive => _isActive;
 }
 
 /// Works as [ValueNotifier.addListener], but returns a cancelable
