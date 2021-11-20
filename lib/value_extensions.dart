@@ -8,16 +8,16 @@ import 'package:value_extensions/src/internal/subscriber_watcher_mixin.dart';
 import 'package:value_extensions/src/internal/watcher_notifier.dart';
 
 // Base
-part 'src/set.dart';
-part 'src/extract_value.dart';
-part 'src/subscribe.dart';
+part 'src/utility/set.dart';
+part 'src/transformers/extract_value.dart';
+part 'src/utility/subscribe.dart';
 // Transformers
-part 'src/map.dart';
-part 'src/flat_map.dart';
-part 'src/where.dart';
-part 'src/combine_latest.dart';
-part 'src/parallel_with.dart';
+part 'src/transformers/map.dart';
+part 'src/transformers/flat_map.dart';
+part 'src/transformers/where.dart';
+part 'src/transformers/combine_latest.dart';
+part 'src/transformers/parallel_with.dart';
 // UI
-part 'src/bind.dart';
+part 'src/ui/bind.dart';
 
 mixin ImportValueExtensions {}
