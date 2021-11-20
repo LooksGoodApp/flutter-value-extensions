@@ -76,17 +76,12 @@ class CounterScreenState extends State {
                 (seconds) => Text("Seconds passed: $seconds"),
               ),
               SizedBox(height: 100),
-              DisposableBuilder(
-                builder: (context, disposeBag) => state.stringCounterValue
-                    .parallelWith(state.counterColor)
-                    .disposedBy(disposeBag)
-                    .bind(
-                      (text, color) => Text(
-                        text,
-                        style: TextStyle(color: color),
-                      ),
+              state.stringCounterValue.parallelWith(state.counterColor).bind(
+                    (text, color) => Text(
+                      text,
+                      style: TextStyle(color: color),
                     ),
-              ),
+                  ),
               OutlinedButton(
                 onPressed: state.increment,
                 child: Text("Increment"),

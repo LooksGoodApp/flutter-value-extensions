@@ -1,12 +1,14 @@
 part of value_extensions;
 
-/// Binds this [ValueNotifier] variable to the given Widget.
+/// Binds this [ValueListenable] variable to the given Widget.
 ///
 /// This is a wrapper for the [ValueListenableBuilder];
-extension Bind<T> on ValueNotifier<T> {
-  /// Binds this [ValueNotifier] variable to the given Widget.
+extension BindValueListenableExtension<T> on ValueListenable<T> {
+  /// Binds this [ValueListenable] variable to the given Widget.
   ///
   /// This is a wrapper for the [ValueListenableBuilder];
   Widget bind(Widget Function(T value) to) => ValueListenableBuilder<T>(
-      valueListenable: this, builder: (_, value, __) => to(value));
+        valueListenable: this,
+        builder: (_, value, __) => to(value),
+      );
 }
