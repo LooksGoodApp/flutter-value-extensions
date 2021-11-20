@@ -44,7 +44,7 @@ class _FilteredValueNotifier<T> extends WatcherNotifier<T> {
 ///
 /// Note – new notifiers' value is assigned without using the filter function
 /// to avoid nulls.
-extension Where<T> on ValueListenable<T> {
+extension WhereValueListenableExtension<T> on ValueListenable<T> {
   /// Creates a new [ValueNotifier] that filters base notifiers' values with
   /// the given filter function.
   ///

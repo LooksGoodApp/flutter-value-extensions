@@ -13,7 +13,7 @@ part of value_extensions;
 /// ```
 ///
 ///
-extension Set<T> on ValueNotifier<T> {
+extension SettersValueNotifierExtension<T> on ValueNotifier<T> {
   /// Convenience setter, used to reduce verbosity.
   ///
   /// Consider this example:
@@ -27,5 +27,6 @@ extension Set<T> on ValueNotifier<T> {
   /// ```
   ///
   ///
-  void set(T Function(T current) transform) => value = transform(value);
+  void set(T newValue) => value = newValue;
+  void update(T Function(T current) transform) => set(transform(value));
 }
