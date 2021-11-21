@@ -1,4 +1,7 @@
-part of value_extensions;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+
+import 'package:value_extensions/src/types.dart';
 
 /// Binds this [ValueListenable] variable to the given Widget.
 ///

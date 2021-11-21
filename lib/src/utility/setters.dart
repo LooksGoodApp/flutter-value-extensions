@@ -1,4 +1,6 @@
-part of value_extensions;
+import 'package:flutter/material.dart';
+
+import 'package:value_extensions/src/types.dart';
 
 /// Convenience setter, used to reduce verbosity.
 ///

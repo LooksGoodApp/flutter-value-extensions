@@ -1,4 +1,6 @@
-part of value_extensions;
+import 'package:flutter/foundation.dart';
+
+import 'package:value_extensions/src/types.dart';
 
 /// [ValueListenable]'s [Subscription] object that can be canceled, paused and
 /// resumed.
@@ -12,7 +14,7 @@ abstract class Subscription {
 }
 
 class _Subscription<A> extends Subscription {
-  final ValueListenable _listenable;
+  final ValueListenable<A> _listenable;
   final VoidCallback _listener;
   bool _isCanceled = false;
   bool _isPaused;

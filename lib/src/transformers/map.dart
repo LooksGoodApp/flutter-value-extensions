@@ -1,4 +1,7 @@
-part of value_extensions;
+import 'package:flutter/foundation.dart';
+
+import 'package:value_extensions/src/internal/subscriber_notifier.dart';
+import 'package:value_extensions/src/types.dart';
 
 class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
   final ValueListenable<A> listenable;

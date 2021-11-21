@@ -1,10 +1,7 @@
-part of value_extensions;
+import 'package:flutter/foundation.dart';
 
-class Pair<A, B> {
-  final A first;
-  final B second;
-  const Pair._(this.first, this.second);
-}
+import 'package:value_extensions/src/types.dart';
+import 'package:value_extensions/src/transformers/combine_latest.dart';
 
 /// Allows to avoid nesting by paralleling two [ValueListenable]s. This is a
 /// wrapper over the [combineLatest] extensions.

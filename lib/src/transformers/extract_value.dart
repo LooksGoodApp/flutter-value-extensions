@@ -1,8 +1,14 @@
-part of value_extensions;
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+
+import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
+import 'package:value_extensions/src/utility/setters.dart';
 
 class _ExtractedValueNotifier<A> extends ValueNotifier<A>
     with WatcherNotifierMixin<A> {
   StreamSubscription<A>? _streamSubscription;
+
   var _streamDone = false;
   var _subscribedOnDone = false;
 

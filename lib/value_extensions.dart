@@ -1,25 +1,18 @@
 library value_extensions;
 
-import 'dart:async';
+export 'src/utility/setters.dart';
+export 'src/transformers/extract_value.dart';
+export 'src/utility/subscribe.dart';
+export 'src/utility/dispose_all.dart';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:value_extensions/src/internal/subscriber_notifier.dart';
-import 'package:value_extensions/src/internal/subscriber_watcher_mixin.dart';
-import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
-import 'package:value_extensions/src/typedefs.dart';
+export 'src/transformers/map.dart';
+export 'src/transformers/flat_map.dart';
+export 'src/transformers/where.dart';
+export 'src/transformers/combine_latest.dart';
+export 'src/transformers/parallel_with.dart';
 
-// Base
-part 'src/utility/set.dart';
-part 'src/transformers/extract_value.dart';
-part 'src/utility/subscribe.dart';
-// Transformers
-part 'src/transformers/map.dart';
-part 'src/transformers/flat_map.dart';
-part 'src/transformers/where.dart';
-part 'src/transformers/combine_latest.dart';
-part 'src/transformers/parallel_with.dart';
-// UI
-part 'src/ui/bind.dart';
+export 'src/ui/bind.dart';
+
+export 'src/types.dart';
 
 mixin ImportValueExtensions {}
