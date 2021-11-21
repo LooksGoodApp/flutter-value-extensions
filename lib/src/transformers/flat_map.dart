@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:value_extensions/src/internal/subscriptions_watcher_notifier_mixin.dart';
-import 'package:value_extensions/src/types.dart';
+import 'package:value_extensions/src/typedefs.dart';
 import 'package:value_extensions/src/utility/setters.dart';
 import 'package:value_extensions/src/utility/subscribe.dart';
 

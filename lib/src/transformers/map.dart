@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:value_extensions/src/internal/subscriber_notifier.dart';
-import 'package:value_extensions/src/types.dart';
+import 'package:value_extensions/src/typedefs.dart';
 
 class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
   @override

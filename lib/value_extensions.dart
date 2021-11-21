@@ -7,7 +7,7 @@ export 'src/transformers/map.dart';
 export 'src/transformers/parallel_with.dart';
 export 'src/transformers/where.dart';
 
-export 'src/types.dart';
+export 'src/typedefs.dart';
 
 export 'src/ui/bind.dart';
 

@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:value_extensions/src/transformers/parallel_with.dart';
 
-import 'package:value_extensions/src/types.dart';
+import 'package:value_extensions/src/typedefs.dart';
 
 /// Binds this [ValueListenable] variable to the given Widget.
 ///

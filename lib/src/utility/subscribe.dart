@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:value_extensions/src/types.dart';
+import 'package:value_extensions/src/typedefs.dart';
 
 /// [ValueListenable]'s [Subscription] object that can be canceled, paused and
 /// resumed.
