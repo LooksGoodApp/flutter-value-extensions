@@ -1,5 +1,7 @@
 // ignore_for_file: cascade_invocations
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
@@ -8,6 +10,7 @@ import 'package:value_extensions/value_extensions.dart';
 void main() {
   int timesTwo(int x) => x * 2;
   int sum(int x, int y) => x + y;
+  Future<void> nextEventLoop() => Future.delayed(Duration.zero);
 
   group("Map transformer tests >", () {
     test("Changing value without listening", () {
@@ -41,11 +44,11 @@ void main() {
       expect(invoked, 2);
       source.set(2); // invoked = 3
       expect(mapped.value, 4);
-      subscription.pause();
+      subscription.pause(); // Subscription paused
       source.set(3);
-      expect(mapped.value, 6); // invoked = 4
+      expect(mapped.value, 6); // Value is read, invoked = 4
       source.set(100); // No effect on invoked – not read and not listened to
-      subscription.pause(); // invoked = 5
+      subscription.pause(); // Subscription resumed, invoked = 5
       source.set(2); // invoked = 6
       expect(invoked, 6);
       source.dispose();
@@ -73,7 +76,7 @@ void main() {
     });
   });
 
-  group("Combine latest transformer test", () {
+  group("Combine latest transformer test >", () {
     test("Initial value is calculated straight away", () {
       final first = ValueNotifier(1);
       final second = ValueNotifier(1);
@@ -98,6 +101,51 @@ void main() {
       first.set(10);
       second.set(10);
       expect(first.value + second.value, 20);
+    });
+  });
+
+  group("Extract value transformer test >", () {
+    test("Derived notifier starts with a passed initial value", () {
+      const emptyStream = Stream<int>.empty();
+      const initial = 0;
+      final extracted = emptyStream.extractValue(initial: initial);
+      expect(extracted.value, initial);
+    });
+
+    test("Derived notifier echoes synchronous stream", () {
+      final streamSource = StreamController<int>.broadcast(sync: true);
+      final sourceAdd = streamSource.sink.add;
+      final derivedNotifier = streamSource.stream.extractValue(initial: 0);
+
+      const firstAdded = 10;
+      sourceAdd(firstAdded);
+      expect(derivedNotifier.value, firstAdded);
+
+      const secondAdded = -5;
+      sourceAdd(secondAdded);
+      expect(derivedNotifier.value, secondAdded);
+
+      streamSource.close();
+      derivedNotifier.dispose();
+    });
+
+    test("Derived notifier echoes asynchronous stream", () async {
+      final streamSource = StreamController<int>.broadcast();
+      final sourceAdd = streamSource.sink.add;
+      final derivedNotifier = streamSource.stream.extractValue(initial: 0);
+
+      const firstAdded = 10;
+      sourceAdd(firstAdded);
+      await nextEventLoop();
+      expect(derivedNotifier.value, firstAdded);
+
+      const secondAdded = -5;
+      sourceAdd(secondAdded);
+      await nextEventLoop();
+      expect(derivedNotifier.value, secondAdded);
+
+      await streamSource.close();
+      derivedNotifier.dispose();
     });
   });
 }
