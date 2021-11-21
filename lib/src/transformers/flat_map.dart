@@ -1,49 +1,56 @@
 part of value_extensions;
 
-typedef _FlatMapTransform<BaseType, DerivedType> = ValueNotifier<DerivedType>
-    Function(BaseType value);
+class _FlatMappedValueNotifier<A, B> extends ValueNotifier<B>
+    with WatcherNotifierMixin<B> {
+  final ValueListenable<A> _baseNotifier;
+  final FlatMapTransform<A, B> _transform;
 
-class _FlatMappedValueNotifier<BaseType, DerivedType>
-    extends ValueNotifier<DerivedType> {
-  final ValueNotifier<BaseType> _baseNotifier;
-  final _FlatMapTransform<BaseType, DerivedType> _transform;
-  late final Subscription _flatMapSubscription;
-
-  Subscription? _currentSubscription;
-  ValueNotifier<DerivedType>? _currentValue;
+  Subscription? _baseNotifierSubscription;
+  Subscription? _currentSourceSubscription;
 
   _FlatMappedValueNotifier(this._baseNotifier, this._transform)
-      : super(_transform(_baseNotifier.value).value) {
-    _flatMapSubscription = _baseNotifier.subscribe(_listener);
-  }
+      : super(_transform(_baseNotifier.value).value);
 
-  void _listener(BaseType baseValue) {
-    _currentValue = _transform(baseValue);
-    set(_currentValue!.value);
-    _currentSubscription?.cancel();
-    _currentSubscription = _currentValue!.subscribe((value) => set(value));
+  ValueListenable<B> _currentNotifier() => _transform(_baseNotifier.value);
+
+  void _subscribeCurrent() {
+    final currentNotifier = _currentNotifier();
+    set(currentNotifier.value);
+    _currentSourceSubscription = currentNotifier.subscribe(set);
   }
 
   @override
-  void dispose() {
-    _currentSubscription?.cancel();
-    _flatMapSubscription.cancel();
-    super.dispose();
+  void onListened() {
+    super.onListened();
+    _subscribeCurrent();
+    _baseNotifierSubscription = _baseNotifier.subscribe((_) {
+      _currentSourceSubscription?.cancel();
+      _subscribeCurrent();
+    });
   }
+
+  @override
+  void onForgotten() {
+    super.onForgotten();
+    _currentSourceSubscription?.cancel();
+    _baseNotifierSubscription?.cancel();
+  }
+
+  @override
+  B get value => hasListeners ? super.value : _currentNotifier().value;
 }
 
-/// Creates a new [ValueNotifier] from the base notifier,
+/// Creates a new [ValueListenable] from the base notifier,
 /// using transform function.
 ///
-/// Works like [ValueNotifier.map] but transform function must return another
-/// [ValueNotifier] instead of regular value.
-extension FlatMap<BaseType> on ValueNotifier<BaseType> {
-  /// Creates a new [ValueNotifier] from the base notifier,
+/// Works like [map] but transform function must return another
+/// [ValueListenable] instead of regular value.
+extension FlatMap<A> on ValueListenable<A> {
+  /// Creates a new [ValueListenable] from the base notifier,
   /// using transform function.
   ///
-  /// Works like [ValueNotifier.map] but transform function must return another
-  /// [ValueNotifier] instead of regular value.
-  _FlatMappedValueNotifier<BaseType, DerivedType> flatMap<DerivedType>(
-          _FlatMapTransform<BaseType, DerivedType> transform) =>
+  /// Works like [map] but transform function must return another
+  /// [ValueListenable] instead of regular value.
+  ValueListenable<B> flatMap<B>(FlatMapTransform<A, B> transform) =>
       _FlatMappedValueNotifier(this, transform);
 }

@@ -6,7 +6,7 @@ maintainer: Yakov Karpov (@purplenoodlesoop)
 homepage: https://github.com/LooksGoodApp/flutter-value-extensions
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
   flutter:
