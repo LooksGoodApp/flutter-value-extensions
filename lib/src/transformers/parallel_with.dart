@@ -23,11 +23,3 @@ extension Parallel<A> on ValueListenable<A> {
         (first, B second) => Pair._(first, second),
       );
 }
-
-extension BindParallel<A, B> on ValueListenable<Pair<A, B>> {
-  Widget bind(Widget Function(A first, B second) to) =>
-      ValueListenableBuilder<Pair<A, B>>(
-        valueListenable: this,
-        builder: (_, value, __) => to(value.first, value.second),
-      );
-}

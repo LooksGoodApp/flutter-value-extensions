@@ -1,16 +1,16 @@
 # value_extensions
 
-Set of extensions on ValueNotifier that allows to use it as Streams in the Rx way. 
+Set of extensions on ValueListenable that allows to use it as Streams in the Rx way. 
 
 This package contains transformers, convenience objects & methods, and Widgets to integrate all listed entities into your UI.
 
 ## Motivation
 
-Generally, there are two PubSub approaches for UI in Flutter: `Stream`s and `ValueNotifier`s. Streams are widely used and can be good in some situations and are very powerful, but they come with a price: boilerplate. 
+Generally, there are two PubSub approaches for UI in Flutter: `Stream`s and `ValueListenable`s. Streams are widely used and can be good in some situations and are very powerful, but they come with a price: boilerplate. 
 
 Controllers, Streams, Sinks, Sync/Async variations, broadcast/not broadcast streams. That is a lot to type and to keep in mind.
 
-`ValueNotifier`s, on the other hand, are a lot simpler, lighter, and need less code. But they lack Stream's power – it's hard to make derived notifiers, dispose of them automatically, subscribe and cancel subscriptions and integrated them without crazy nesting in UI. **Value Extensions** solves this problem.
+`ValueListenable`s, on the other hand, are a lot simpler, lighter, and need less code. But they lack Stream's power – it's hard to make derived notifiers, dispose of them automatically, subscribe and cancel subscriptions and integrated them without crazy nesting in UI. **Value Extensions** solves this problem.
 
 ## Getting started 
 
@@ -36,50 +36,27 @@ someNotifier.set((current) => current * 10);
 
 ### Subscribe
 
-ValueNotifiers provide subscription functionality out of the box, but it is a bit tricky to get information about their status and cancel them. This extension provides functionality for these cases.
+ValueListenable provide subscription functionality out of the box, but it is a bit tricky to get information about their status and cancel them. This extension provides functionality for these cases.
 
 ```dart
-final subscription = someValueNotifier.subscribe((value) => print(value));
+final subscription = someValueListenable.subscribe((value) => print(value));
 
 print(subscription.isCanceled); // Prints 'false'
-someValueNotifier.set((_) => 10); // Prints 10
+someValueListenable.set((_) => 10); // Prints 10
 
 subscription.cancel()
 
 print(subscription.isCanceled); // Prints 'true'
-someValueNotifier.set((_) => 100); // Does not print
+someValueListenable.set((_) => 100); // Does not print
 ```
 
 ### Extract value
 
-Sometimes, there is a need to convert a `Stream` to a `ValueNotifier`. This extension does exactly that.
+Sometimes, there is a need to convert a `Stream` to a `ValueListenable`. This extension does exactly that.
 
 ```dart
 final stream = Stream.periodic(Duration(seconds: 1), (second) => second);
 final secondsPassed = stream.extractValue(initial: 0);
-```
-
-### Dispose
-
-Just as `Streams`, `ValueNotifiers`s need to be properly disposed in order for resources to be released. Regular approach usually would look like a dispose method with a bunch of `someNotifier.dispose()`s in it in the reverse order of their creation.
-
-Value Extensions provide a more pleasant way of doing so – `DisposeBag` and `.disposedBy(disposeBag)`.
-
-`DisposeBag` is a simple container that stores notifiers that need to be disposed. It has a single method – `clear()` that disposes every service that was added to it in reverse order.
-
-`.disposedBy(disposeBag)` is an extension that adds a `ValueNotifier` to an instance of a `DisposeBag`.
-
-Example usage would look like this.
-
-```dart 
-final disposeBag = DisposeBag();
-
-final intNotifier = ValueNotifier(0).disposedBy(disposeBag);
-final stringNotifier = ValueNotifier('Hello, Wold!').disposedBy(disposeBag);
-
-// Disposes notifiers in reverse order of being added: 
-// stringNotifier -> intNotifier.
-disposeBag.clear(); 
 ```
 
 ## Transformers
@@ -88,7 +65,7 @@ The next section focuses on the transformation of the Notifiers. They implement 
 
 ### Map
 
-Creates a new ValueNotifier, deriving its value from the base one using the transform function.
+Creates a new ValueListenable, deriving its value from the base one using the transform function.
 
 ```dart
 final stringNotifier = ValueNotifier('Hello');
@@ -98,9 +75,9 @@ stringNotifier.set((current) => current + ', World!'); // lengthNotifier value b
 
 ### Flat map
 
-Works as a regular `.map()`, but takes a function that returns a ValueNotifier and "flattens" the result. 
+Works as a regular `.map()`, but takes a function that returns a ValueListenable and "flattens" the result. 
 
-So instead of ValueNotifier\<ValueNotifier\<T\>\>, it becomes a regular ValueNotifier\<T\>.
+So instead of ValueListenable\<ValueListenable\<T\>\>, it becomes a regular ValueListenable\<T\>.
 
 ```dart
 final intNotifier = ValueNotifier(0);
@@ -164,7 +141,7 @@ Both Streams and ValueNotifiers are intended to be displayed in the UI through B
 
 ### Bind
 
-To bind a ValueNotifier to the UI, the `.bind(...)` extension is used. 
+To bind a ValueListenable to the UI, the `.bind(...)` extension is used. 
 
 Consider these two examples: using `ValueListenableBuilder` and `.bind(...)`.
 
@@ -181,7 +158,7 @@ nameNotifier.bind(
 )
 ```
 
-The `.bind(...)` extension uses `ValueListenableBuilder` inside, you have the same efficient targeted rebuilds, but with less code to type.
+The `.bind(...)` extension uses `ValueListenableBuilder` inside, so you'll have the same efficient targeted rebuilds, but with less code to type.
 
 ### Disposable builder
 

@@ -45,7 +45,7 @@ class _FlatMappedValueNotifier<A, B> extends ValueNotifier<B>
 ///
 /// Works like [map] but transform function must return another
 /// [ValueListenable] instead of regular value.
-extension FlatMap<A> on ValueListenable<A> {
+extension ValueListenableFlatMapExtension<A> on ValueListenable<A> {
   /// Creates a new [ValueListenable] from the base notifier,
   /// using transform function.
   ///

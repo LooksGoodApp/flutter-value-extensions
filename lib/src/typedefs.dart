@@ -1,5 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
-typedef UnaryTransform<A, B> = B Function(A a);
-typedef BinaryTransform<A, B, C> = C Function(A a, B b);
-typedef FlatMapTransform<A, B> = UnaryTransform<A, ValueListenable<B>>;
+typedef UnaryFunction<A, B> = B Function(A value);
+typedef BinaryFunction<A, B, C> = C Function(A first, B second);
+typedef Predicate<A> = UnaryFunction<A, bool>;
+typedef FlatMapTransform<A, B> = UnaryFunction<A, ValueListenable<B>>;
+typedef Endomorphic<A> = UnaryFunction<A, A>;
+typedef UnaryVoidCallback<A> = UnaryFunction<A, void>;
+typedef UnaryWidgetBuilder<A> = UnaryFunction<A, Widget>;
+typedef BinaryWidgetBuilder<A, B> = BinaryFunction<A, B, Widget>;

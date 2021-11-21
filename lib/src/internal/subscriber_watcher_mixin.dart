@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
 import 'package:value_extensions/value_extensions.dart';
 
-mixin SubscriberWatcherMixin<T> on WatcherNotifierMixin<T> {
-  T computeValue();
+mixin SubscriberWatcherMixin<A> on WatcherNotifierMixin<A> {
+  A computeValue();
   Listenable get listenable;
 
   Listenable? _cache;
@@ -25,8 +25,5 @@ mixin SubscriberWatcherMixin<T> on WatcherNotifierMixin<T> {
   }
 
   @override
-  T get value {
-    if (!hasListeners) _updateValue();
-    return super.value;
-  }
+  A get value => hasListeners ? super.value : computeValue();
 }

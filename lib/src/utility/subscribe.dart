@@ -1,6 +1,7 @@
 part of value_extensions;
 
-/// [ValueNotifier] [Subscription] object that can be canceled.
+/// [ValueListenable]'s [Subscription] object that can be canceled, paused and
+/// resumed.
 abstract class Subscription {
   void cancel();
   void pause();
@@ -10,9 +11,9 @@ abstract class Subscription {
   bool get isActive;
 }
 
-class _Subscription<T> extends Subscription {
+class _Subscription<A> extends Subscription {
   final ValueListenable _listenable;
-  final void Function() _listener;
+  final VoidCallback _listener;
   bool _isCanceled = false;
   bool _isPaused;
   bool _isActive;
@@ -60,13 +61,13 @@ class _Subscription<T> extends Subscription {
   bool get isActive => _isActive;
 }
 
-/// Works as [ValueNotifier.addListener], but returns a cancelable
+/// Works as [ValueListenable.addListener], but returns a cancelable
 /// [Subscription] object
-extension Subscribe<T> on ValueListenable<T> {
-  /// Works as [ValueNotifier.addListener], but returns a cancelable
+extension ValueListenableSubscribeExtensions<A> on ValueListenable<A> {
+  /// Works as [ValueListenable.addListener], but returns a cancelable
   /// [Subscription] object
-  _Subscription<T> subscribe(
-    void Function(T value) listener, {
+  _Subscription<A> subscribe(
+    UnaryVoidCallback<A> listener, {
     bool subscribe = true,
   }) =>
       _Subscription(this, () => listener(value), subscribe: subscribe);

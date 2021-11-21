@@ -3,7 +3,7 @@ part of value_extensions;
 class _CombineLatestValueNotifier<A, B, C> extends SubscriberNotifier<C> {
   final ValueListenable<A> _first;
   final ValueListenable<B> _second;
-  final BinaryTransform<A, B, C> _transform;
+  final BinaryFunction<A, B, C> _transform;
 
   _CombineLatestValueNotifier(this._first, this._second, this._transform)
       : super(_transform(_first.value, _second.value));
@@ -16,13 +16,13 @@ class _CombineLatestValueNotifier<A, B, C> extends SubscriberNotifier<C> {
 /// Creates a new [ValueListenable] from the given two, using the given
 /// transform function, updating its value every time any of the two
 /// base notifiers change.
-extension CombineLatest<A> on ValueListenable<A> {
+extension ValueListenableCombineLatestExtension<A> on ValueListenable<A> {
   /// Creates a new [ValueListenable] from the given two, using the given
   /// transform function, updating its value every time any of the two
   /// base notifiers change.
   ValueListenable<C> combineLatest<B, C>(
     ValueListenable<B> other,
-    BinaryTransform<A, B, C> transform,
+    BinaryFunction<A, B, C> transform,
   ) =>
       _CombineLatestValueNotifier(this, other, transform);
 }

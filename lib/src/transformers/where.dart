@@ -1,16 +1,16 @@
 part of value_extensions;
 
-class _FilteredValueNotifier<T> extends SubscriberNotifier<T> {
-  final ValueListenable<T> listenable;
-  final bool Function(T value) _filter;
+class _FilteredValueNotifier<A> extends SubscriberNotifier<A> {
+  final ValueListenable<A> listenable;
+  final Predicate<A> _predicate;
 
-  _FilteredValueNotifier(this.listenable, this._filter)
+  _FilteredValueNotifier(this.listenable, this._predicate)
       : super(listenable.value);
 
-  T computeValue() {
-    final baseValue = listenable.value;
+  A computeValue() {
+    final sourceValue = listenable.value;
 
-    return _filter(baseValue) ? baseValue : super.value;
+    return _predicate(sourceValue) ? sourceValue : super.value;
   }
 }
 
@@ -19,12 +19,12 @@ class _FilteredValueNotifier<T> extends SubscriberNotifier<T> {
 ///
 /// Note – new notifiers' value is assigned without using the filter function
 /// to avoid nulls.
-extension WhereValueListenableExtension<T> on ValueListenable<T> {
-  /// Creates a new [ValueNotifier] that filters base notifiers' values with
+extension ValueListenableWhereExtension<A> on ValueListenable<A> {
+  /// Creates a new [ValueListenable] that filters base notifiers' values with
   /// the given filter function.
   ///
   /// Note – new notifiers' value is assigned without using the filter function
   /// to avoid nulls.
-  ValueListenable<T> where(bool Function(T value) filter) =>
-      _FilteredValueNotifier(this, filter);
+  ValueListenable<A> where(Predicate<A> predicate) =>
+      _FilteredValueNotifier(this, predicate);
 }

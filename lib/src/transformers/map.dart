@@ -2,7 +2,7 @@ part of value_extensions;
 
 class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
   final ValueListenable<A> listenable;
-  final B Function(A value) _transform;
+  final UnaryFunction<A, B> _transform;
 
   _MappedValueNotifier(this.listenable, this._transform)
       : super(_transform(listenable.value));
@@ -11,10 +11,10 @@ class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
 }
 
 /// Creates a new [ValueListenable] using the [transform] function
-extension MapValueListenableExtensions<BaseType> on ValueListenable<BaseType> {
+extension ValueListenableMapExtension<A> on ValueListenable<A> {
   /// Creates a new [ValueListenable] using the [transform] function
-  ValueListenable<DerivedType> map<DerivedType>(
-    DerivedType Function(BaseType value) transform,
+  ValueListenable<B> map<B>(
+    UnaryFunction<A, B> transform,
   ) =>
       _MappedValueNotifier(this, transform);
 }

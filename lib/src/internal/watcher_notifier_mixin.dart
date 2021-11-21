@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-mixin WatcherNotifierMixin<T> on ValueNotifier<T> {
+mixin WatcherNotifierMixin<A> on ValueNotifier<A> {
   final _listenersSet = <VoidCallback>{};
 
   @override
