@@ -57,8 +57,7 @@ void main() {
 
   group("Where transformer test >", () {
     test("Initial value is ignored", () {
-      const odd = 3;
-      expect(ValueNotifier(odd).where((value) => value.isEven).value, odd);
+      expect(ValueNotifier(3).where((value) => value.isEven).value, 3);
     });
 
     test("Filtering source", () {
@@ -107,9 +106,8 @@ void main() {
   group("Extract value transformer test >", () {
     test("Derived notifier starts with a passed initial value", () {
       const emptyStream = Stream<int>.empty();
-      const initial = 0;
-      final extracted = emptyStream.extractValue(initial: initial);
-      expect(extracted.value, initial);
+      final extracted = emptyStream.extractValue(initial: 0);
+      expect(extracted.value, 0);
     });
 
     test("Derived notifier echoes synchronous stream", () {
@@ -117,13 +115,11 @@ void main() {
       final sourceAdd = streamSource.sink.add;
       final derivedNotifier = streamSource.stream.extractValue(initial: 0);
 
-      const firstAdded = 10;
-      sourceAdd(firstAdded);
-      expect(derivedNotifier.value, firstAdded);
+      sourceAdd(10);
+      expect(derivedNotifier.value, 10);
 
-      const secondAdded = -5;
-      sourceAdd(secondAdded);
-      expect(derivedNotifier.value, secondAdded);
+      sourceAdd(-5);
+      expect(derivedNotifier.value, -5);
 
       streamSource.close();
       derivedNotifier.dispose();
@@ -134,18 +130,75 @@ void main() {
       final sourceAdd = streamSource.sink.add;
       final derivedNotifier = streamSource.stream.extractValue(initial: 0);
 
-      const firstAdded = 10;
-      sourceAdd(firstAdded);
+      sourceAdd(10);
       await nextEventLoop();
-      expect(derivedNotifier.value, firstAdded);
+      expect(derivedNotifier.value, 10);
 
-      const secondAdded = -5;
-      sourceAdd(secondAdded);
+      sourceAdd(-5);
       await nextEventLoop();
-      expect(derivedNotifier.value, secondAdded);
+      expect(derivedNotifier.value, -5);
 
       await streamSource.close();
       derivedNotifier.dispose();
+    });
+  });
+
+  group("Flat map transformer test >", () {
+    test("Static trigger echoes dynamic source", () {
+      final trigger = ValueNotifier(true);
+      final source = ValueNotifier(0);
+
+      final derivedNotifier = trigger.flatMap((_) => source);
+
+      expect(derivedNotifier.value, 0);
+
+      source.set(10);
+
+      expect(derivedNotifier.value, 10);
+    });
+
+    test("Dynamic trigger echoes static sources", () {
+      final trigger = ValueNotifier(true);
+      final firstSource = ValueNotifier(0);
+      final secondSource = ValueNotifier(10);
+
+      final derivedNotifier = trigger.flatMap(
+        (value) => value ? firstSource : secondSource,
+      );
+
+      expect(derivedNotifier.value, firstSource.value);
+
+      trigger.set(false);
+
+      expect(derivedNotifier.value, secondSource.value);
+    });
+
+    test("Dynamic trigger echoes dynamic sources", () {
+      final trigger = ValueNotifier(true);
+      final firstSource = ValueNotifier(0);
+      final secondSource = ValueNotifier(10);
+
+      final derivedNotifier = trigger.flatMap(
+        (value) => value ? firstSource : secondSource,
+      );
+
+      expect(derivedNotifier.value, 0);
+
+      firstSource.set(5);
+      expect(derivedNotifier.value, 5);
+
+      trigger.set(false);
+
+      expect(derivedNotifier.value, 10);
+
+      secondSource.set(100);
+      expect(derivedNotifier.value, 100);
+
+      trigger.set(true);
+      expect(derivedNotifier.value, 5);
+
+      trigger.set(false);
+      expect(derivedNotifier.value, 100);
     });
   });
 }
