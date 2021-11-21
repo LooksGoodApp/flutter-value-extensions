@@ -28,5 +28,5 @@ extension ValueNotifierSettersExtension<A> on ValueNotifier<A> {
   ///
   ///
   void set(A newValue) => value = newValue;
-  void update(Endomorphic<A> transform) => set(transform(value));
+  void update(Endomorphic<A> update) => set(update(value));
 }
