@@ -9,7 +9,8 @@ class StateObject {
   final _counter = ValueNotifier(0);
 
   /// Base stream for conversion demonstration
-  final _timer = Stream.periodic(Duration(seconds: 1), (second) => second);
+  final _timer =
+      Stream.periodic(const Duration(seconds: 1), (second) => second);
 
   /// Derived subscription using [where()] and [subscribe()] extensions
   late final Subscription evenPrintSubscription;
@@ -39,14 +40,14 @@ class StateObject {
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text("Home")),
+        appBar: AppBar(title: const Text("Home")),
         body: Center(
           child: OutlinedButton(
-            onPressed: () => Navigator.push(
+            onPressed: () => Navigator.push<void>(
               context,
               MaterialPageRoute(builder: (context) => CounterScreen()),
             ),
-            child: Text("Navigate to Counter"),
+            child: const Text("Navigate to Counter"),
           ),
         ),
       );
@@ -75,7 +76,7 @@ class CounterScreenState extends State {
               state.secondsPassed.bind(
                 (seconds) => Text("Seconds passed: $seconds"),
               ),
-              SizedBox(height: 100),
+              const SizedBox(height: 100),
               state.stringCounterValue.parallelWith(state.counterColor).bind(
                     (text, color) => Text(
                       text,
@@ -84,15 +85,15 @@ class CounterScreenState extends State {
                   ),
               OutlinedButton(
                 onPressed: state.increment,
-                child: Text("Increment"),
+                child: const Text("Increment"),
               ),
               OutlinedButton(
                 onPressed: state.evenPrintSubscription.cancel,
-                child: Text("Cancel print"),
+                child: const Text("Cancel print"),
               ),
               OutlinedButton(
                 onPressed: Navigator.of(context).pop,
-                child: Text("Navigate back"),
+                child: const Text("Navigate back"),
               ),
             ],
           ),

@@ -11,8 +11,10 @@ class _CombineLatestValueNotifier<A, B, C> extends SubscriberNotifier<C> {
   _CombineLatestValueNotifier(this._first, this._second, this._transform)
       : super(_transform(_first.value, _second.value));
 
+  @override
   C computeValue() => _transform(_first.value, _second.value);
 
+  @override
   Listenable get listenable => Listenable.merge([_first, _second]);
 }
 

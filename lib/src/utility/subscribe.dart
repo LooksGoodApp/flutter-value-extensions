@@ -41,12 +41,14 @@ class _Subscription<A> extends Subscription {
     if (!_isCanceled) body();
   }
 
+  @override
   void cancel() => _ifNotCanceled(() {
         _unsubscribe();
         _isCanceled = true;
         _isActive = false;
       });
 
+  @override
   void pause() => _ifNotCanceled(() {
         if (_isPaused) {
           _isPaused = false;
@@ -58,8 +60,11 @@ class _Subscription<A> extends Subscription {
           _unsubscribe();
         }
       });
+  @override
   bool get isCanceled => _isCanceled;
+  @override
   bool get isPaused => _isPaused;
+  @override
   bool get isActive => _isActive;
 }
 

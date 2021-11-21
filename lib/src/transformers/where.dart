@@ -4,12 +4,14 @@ import 'package:value_extensions/src/internal/subscriber_notifier.dart';
 import 'package:value_extensions/src/types.dart';
 
 class _FilteredValueNotifier<A> extends SubscriberNotifier<A> {
+  @override
   final ValueListenable<A> listenable;
   final Predicate<A> _predicate;
 
   _FilteredValueNotifier(this.listenable, this._predicate)
       : super(listenable.value);
 
+  @override
   A computeValue() {
     final sourceValue = listenable.value;
 

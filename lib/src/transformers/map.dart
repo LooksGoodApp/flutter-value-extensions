@@ -4,12 +4,14 @@ import 'package:value_extensions/src/internal/subscriber_notifier.dart';
 import 'package:value_extensions/src/types.dart';
 
 class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
+  @override
   final ValueListenable<A> listenable;
   final UnaryFunction<A, B> _transform;
 
   _MappedValueNotifier(this.listenable, this._transform)
       : super(_transform(listenable.value));
 
+  @override
   B computeValue() => _transform(listenable.value);
 }
 

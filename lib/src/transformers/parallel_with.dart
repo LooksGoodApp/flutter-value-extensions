@@ -17,6 +17,7 @@ extension Parallel<A> on ValueListenable<A> {
   ValueListenable<Pair<A, B>> parallelWith<B>(ValueListenable<B> other) =>
       combineLatest(
         other,
+        // ignore: avoid_types_on_closure_parameters
         (first, B second) => Pair._(first, second),
       );
 }

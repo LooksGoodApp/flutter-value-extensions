@@ -20,5 +20,6 @@ mixin WatcherNotifierMixin<A> on ValueNotifier<A> {
 
   void onForgotten() {}
 
+  @override
   bool get hasListeners => _listenersSet.isNotEmpty;
 }
