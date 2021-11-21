@@ -7,6 +7,7 @@ import 'package:value_extensions/value_extensions.dart';
 
 void main() {
   int timesTwo(int x) => x * 2;
+  int sum(int x, int y) => x + y;
 
   group("Map transformer tests >", () {
     test("Changing value without listening", () {
@@ -69,6 +70,34 @@ void main() {
       expect(filtered.value, 3);
       source.set(4);
       expect(filtered.value, 3);
+    });
+  });
+
+  group("Combine latest transformer test", () {
+    test("Initial value is calculated straight away", () {
+      final first = ValueNotifier(1);
+      final second = ValueNotifier(1);
+      final combined = first.combineLatest(second, sum);
+      final matcher = sum(first.value, second.value);
+      expect(combined.value, matcher);
+    });
+
+    test("Combining latest values", () {
+      final first = ValueNotifier(1);
+      final second = ValueNotifier(1);
+      final combined = first.combineLatest(second, sum);
+      var currentValue = first.value + second.value;
+      combined.subscribe((value) {
+        currentValue = value;
+      });
+      expect(currentValue, 2);
+      first.set(9);
+      expect(currentValue, 10);
+      second.set(6);
+      expect(currentValue, 15);
+      first.set(10);
+      second.set(10);
+      expect(first.value + second.value, 20);
     });
   });
 }
