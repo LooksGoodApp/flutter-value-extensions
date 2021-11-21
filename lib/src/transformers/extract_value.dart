@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
+import 'package:value_extensions/src/internal/subscriptions_watcher_notifier_mixin.dart';
 import 'package:value_extensions/src/utility/setters.dart';
 
 class _ExtractedValueNotifier<A> extends ValueNotifier<A>
-    with WatcherNotifierMixin<A> {
+    with SubscriptionsWatcherNotifierMixin<A> {
   StreamSubscription<A>? _streamSubscription;
 
   var _streamDone = false;
@@ -41,7 +41,7 @@ class _ExtractedValueNotifier<A> extends ValueNotifier<A>
   A get value {
     if (_streamSubscription == null && !_subscribedOnDone) {
       _subscribe();
-      Future(() {
+      Future<void>(() {
         _unsubscribe();
         if (_streamDone) _subscribedOnDone = true;
       });

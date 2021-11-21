@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
+import 'package:value_extensions/src/internal/subscriptions_watcher_notifier_mixin.dart';
 import 'package:value_extensions/value_extensions.dart';
 
-mixin SubscriberWatcherMixin<A> on WatcherNotifierMixin<A> {
+mixin SubscriberWatcherMixin<A> on SubscriptionsWatcherNotifierMixin<A> {
   A computeValue();
   Listenable get listenable;
 

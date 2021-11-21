@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:value_extensions/src/internal/watcher_notifier_mixin.dart';
+import 'package:value_extensions/src/internal/subscriptions_watcher_notifier_mixin.dart';
 import 'package:value_extensions/src/types.dart';
 import 'package:value_extensions/src/utility/setters.dart';
 import 'package:value_extensions/src/utility/subscribe.dart';
 
 class _FlatMappedValueNotifier<A, B> extends ValueNotifier<B>
-    with WatcherNotifierMixin<B> {
+    with SubscriptionsWatcherNotifierMixin<B> {
   final ValueListenable<A> _baseNotifier;
   final FlatMapTransform<A, B> _transform;
 
