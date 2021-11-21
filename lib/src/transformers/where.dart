@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:value_extensions/src/internal/subscriber_notifier.dart';
-import 'package:value_extensions/src/utility/setters.dart';
 import 'package:value_extensions/src/typedefs.dart';
 
 class _FilteredValueNotifier<A> extends SubscriberNotifier<A> {
@@ -15,10 +14,8 @@ class _FilteredValueNotifier<A> extends SubscriberNotifier<A> {
   @override
   A computeValue() {
     final sourceValue = listenable.value;
-    final result = _predicate(sourceValue);
-    final returningValue = result ? sourceValue : currentValue;
-    if (!hasListeners && result) set(returningValue);
-    return returningValue;
+
+    return _predicate(sourceValue) ? sourceValue : currentValue;
   }
 }
 

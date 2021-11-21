@@ -25,7 +25,10 @@ mixin SubscriberWatcherMixin<A> on SubscriptionsWatcherNotifierMixin<A> {
   }
 
   @override
-  A get value => hasListeners ? super.value : computeValue();
+  A get value {
+    if (!hasListeners) _updateValue();
+    return currentValue;
+  }
 
   A get currentValue => super.value;
 }
