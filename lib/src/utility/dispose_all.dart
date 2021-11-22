@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-void disposeAll(
-  List<ChangeNotifier> disposables,
-) =>
-    disposables.reversed.forEach((disposable) => disposable.dispose());
+extension ListChangeNotifierDisposeAllExtension on List<ChangeNotifier> {
+  void disposeAll() => reversed.forEach((disposable) => disposable.dispose());
+}

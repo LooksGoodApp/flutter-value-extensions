@@ -26,7 +26,7 @@ class _ExtractedValueNotifier<A> extends ValueNotifier<A>
   }
 }
 
-extension ExtractValueStreamExtension<A> on Stream<A> {
+extension StreamExtractValueExtension<A> on Stream<A> {
   StreamValueListenable<A> extractValue({required A initial}) =>
       _ExtractedValueNotifier(this, initial);
 }

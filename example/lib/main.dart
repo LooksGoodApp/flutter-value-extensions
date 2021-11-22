@@ -8,6 +8,9 @@ class StateObject {
   /// Base private notifier that every other derives its value from.
   final _counter = ValueNotifier(0);
 
+  late final StreamValueListenable<int> _secondsPassed =
+      _timer.extractValue(initial: 0);
+
   /// Base stream for conversion demonstration
   final _timer =
       Stream.periodic(const Duration(seconds: 1), (second) => second);
@@ -26,31 +29,17 @@ class StateObject {
   ValueListenable<String> get stringCounterValue =>
       _counter.map((value) => value.toString());
 
-  ValueListenable<int> get secondsPassed => _timer.extractValue(initial: 0);
+  ValueListenable<int> get secondsPassed => _secondsPassed;
+
+  List<ChangeNotifier> get _disposable => [_counter, _secondsPassed];
 
   void increment() => _counter.update((value) => value + 1);
 
   void dispose() {
     evenPrintSubscription.cancel();
-    _counter.dispose();
+    _disposable.disposeAll();
     print("Disposed $this");
   }
-}
-
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text("Home")),
-        body: Center(
-          child: OutlinedButton(
-            onPressed: () => Navigator.push<void>(
-              context,
-              MaterialPageRoute(builder: (context) => CounterScreen()),
-            ),
-            child: const Text("Navigate to Counter"),
-          ),
-        ),
-      );
 }
 
 class CounterScreen extends StatefulWidget {
@@ -96,6 +85,22 @@ class CounterScreenState extends State {
                 child: const Text("Navigate back"),
               ),
             ],
+          ),
+        ),
+      );
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text("Home")),
+        body: Center(
+          child: OutlinedButton(
+            onPressed: () => Navigator.push<void>(
+              context,
+              MaterialPageRoute(builder: (context) => CounterScreen()),
+            ),
+            child: const Text("Navigate to Counter"),
           ),
         ),
       );
