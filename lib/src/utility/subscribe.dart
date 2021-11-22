@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 
 import 'package:value_extensions/src/typedefs.dart';
 
-/// [ValueListenable]'s [Subscription] object that can be canceled, paused and
-/// resumed.
 abstract class Subscription {
   void cancel();
   void pause();
@@ -68,11 +66,15 @@ class _Subscription<A> extends Subscription {
   bool get isActive => _isActive;
 }
 
+/// {@template subscribe.extension}
 /// Works as [ValueListenable.addListener], but returns a cancelable
-/// [Subscription] object
+/// [Subscription] object that can be paused, canceled and resumed.
+///
+/// To resume a subscription after the [pause()] method was invoked it must
+/// be invoked a second time.
+/// {@endtemplate}
 extension ValueListenableSubscribeExtensions<A> on ValueListenable<A> {
-  /// Works as [ValueListenable.addListener], but returns a cancelable
-  /// [Subscription] object
+  /// {@macro subscribe.extension}
   _Subscription<A> subscribe(
     UnaryVoidCallback<A> listener, {
     bool subscribe = true,

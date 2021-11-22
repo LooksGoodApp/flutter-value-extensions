@@ -2,7 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:value_extensions/src/internal/subscriptions_watcher_notifier_mixin.dart';
 import 'package:value_extensions/value_extensions.dart';
 
-mixin SubscriberWatcherMixin<A> on SubscriptionsWatcherNotifierMixin<A> {
+/// Mixin that allows efficiently deriving a [ValueNotifier] from a
+/// base [Listenable].
+///
+/// The subscription is active only when the class that
+/// mixes [SubscriberWatcherMixin] in itself has listeners. It is cancelled when
+/// it looses the last subscriber, thus automatically managing the relationship
+/// between [Listenable]s
+mixin SubscriberWatcherMixin<A>
+    on ValueNotifier<A>, SubscriptionsWatcherNotifierMixin {
   A computeValue();
   Listenable get listenable;
 

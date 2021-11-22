@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-mixin SubscriptionsWatcherNotifierMixin<A> on ValueNotifier<A> {
+/// Mixin that watches adding and removal of the listeners that allows to
+/// execute callbacks when the [ChangeNotifier] obtains the first listener or
+/// looses the last one.
+mixin SubscriptionsWatcherNotifierMixin on ChangeNotifier {
   @override
   void addListener(VoidCallback listener) {
     if (!hasListeners) onListened();

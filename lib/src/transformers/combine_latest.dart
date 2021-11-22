@@ -18,13 +18,13 @@ class _CombineLatestValueNotifier<A, B, C> extends SubscriberNotifier<C> {
   Listenable get listenable => Listenable.merge([_first, _second]);
 }
 
+/// {@template combine_latest.extension}
 /// Creates a new [ValueListenable] from the given two, using the given
 /// transform function, updating its value every time any of the two
 /// base notifiers change.
+/// {@endtemplate}
 extension ValueListenableCombineLatestExtension<A> on ValueListenable<A> {
-  /// Creates a new [ValueListenable] from the given two, using the given
-  /// transform function, updating its value every time any of the two
-  /// base notifiers change.
+  /// {@macro combine_latest.extension}
   ValueListenable<C> combineLatest<B, C>(
     ValueListenable<B> other,
     BinaryFunction<A, B, C> transform,

@@ -15,9 +15,13 @@ class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
   B computeValue() => _transform(listenable.value);
 }
 
-/// Creates a new [ValueListenable] using the [transform] function
+/// {@template map.extension}
+/// Creates a new [ValueListenable] using the [transform] function, recomputing
+/// its value every time the base Listenable changes, applying the [transform]
+/// function to the new value.
+/// {@endtemplate}
 extension ValueListenableMapExtension<A> on ValueListenable<A> {
-  /// Creates a new [ValueListenable] using the [transform] function
+  /// {@macro map.extension}
   ValueListenable<B> map<B>(
     UnaryFunction<A, B> transform,
   ) =>

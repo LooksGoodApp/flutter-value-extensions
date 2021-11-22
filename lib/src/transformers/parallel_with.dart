@@ -8,17 +8,15 @@ class Pair<A, B> {
   const Pair._(this.first, this.second);
 }
 
+/// {@template parallel_with.extension}
 /// Allows to avoid nesting by paralleling two [ValueListenable]s. This is a
 /// wrapper over the [combineLatest] extensions.
 ///
-/// Performance note – this extensions is often used inside UI, and its result
-/// must be disposed as any other [ValueListenable].
+/// The bind method on the obtained [ValueListenable] automatically destructures
+/// its only argument.
+/// {@endtemplate}
 extension ValueListenableParallelExtension<A> on ValueListenable<A> {
-  /// Allows to avoid nesting by paralleling two [ValueListenable]s. This is a
-  /// wrapper over the [combineLatest] extensions.
-  ///
-  /// Performance note – this extensions is often used inside UI, and its result
-  /// must be disposed as any other [ValueListenable].
+  /// {@macro parallel_with.extension}
   ValueListenable<Pair<A, B>> parallelWith<B>(ValueListenable<B> other) =>
       combineLatest(
         other,

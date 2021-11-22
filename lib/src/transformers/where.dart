@@ -19,17 +19,14 @@ class _FilteredValueNotifier<A> extends SubscriberNotifier<A> {
   }
 }
 
-/// Creates a new [ValueListenable] that filters base notifiers' values with
-/// the given filter function.
+/// {@template where.extension}
+/// Creates a new [ValueListenable] that filters base
+/// [ValueListenable]'s values using the give predicate.
 ///
-/// Note – new notifiers' value is assigned without using the filter function
-/// to avoid nulls.
+/// Note – initial listenable's value is assigned without using the predicate.
+/// {@endtemplate}
 extension ValueListenableWhereExtension<A> on ValueListenable<A> {
-  /// Creates a new [ValueListenable] that filters base notifiers' values with
-  /// the given filter function.
-  ///
-  /// Note – new notifiers' value is assigned without using the filter function
-  /// to avoid nulls.
+  /// {@macro where.extension}
   ValueListenable<A> where(Predicate<A> predicate) =>
       _FilteredValueNotifier(this, predicate);
 }

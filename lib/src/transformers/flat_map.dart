@@ -6,7 +6,7 @@ import 'package:value_extensions/src/utility/setters.dart';
 import 'package:value_extensions/src/utility/subscribe.dart';
 
 class _FlatMappedValueNotifier<A, B> extends ValueNotifier<B>
-    with SubscriptionsWatcherNotifierMixin<B> {
+    with SubscriptionsWatcherNotifierMixin {
   final ValueListenable<A> _baseNotifier;
   final FlatMapTransform<A, B> _transform;
 
@@ -45,17 +45,16 @@ class _FlatMappedValueNotifier<A, B> extends ValueNotifier<B>
   B get value => hasListeners ? super.value : _currentNotifier().value;
 }
 
+/// {@template flat_map.extension}
 /// Creates a new [ValueListenable] from the base notifier,
 /// using transform function.
 ///
 /// Works like [map] but transform function must return another
-/// [ValueListenable] instead of regular value.
+/// [ValueListenable] instead of regular value, recomputing its value every time
+/// when the [ValueListenable] on which the [flatMap] was called changes.
+/// {@endtemplate}
 extension ValueListenableFlatMapExtension<A> on ValueListenable<A> {
-  /// Creates a new [ValueListenable] from the base notifier,
-  /// using transform function.
-  ///
-  /// Works like [map] but transform function must return another
-  /// [ValueListenable] instead of regular value.
+  /// {@macro flat_map.extension}
   ValueListenable<B> flatMap<B>(FlatMapTransform<A, B> transform) =>
       _FlatMappedValueNotifier(this, transform);
 }

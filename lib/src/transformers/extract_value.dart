@@ -26,7 +26,16 @@ class _ExtractedValueNotifier<A> extends ValueNotifier<A>
   }
 }
 
+/// {@template extract_value.extension}
+/// Creates a new [StreamValueListenable] that echoes the stream, converting it
+/// to [ValueListenable].
+///
+/// The [StreamValueListenable] implements [ChangeNotifier] to expose
+/// the [dispose] method. It is mandatory to call it on the obtained Listenable
+/// because it cancels the [StreamSubscription] under the hood.
+/// {@endtemplate}
 extension StreamExtractValueExtension<A> on Stream<A> {
+  /// {@macro extract_value.extension}
   StreamValueListenable<A> extractValue({required A initial}) =>
       _ExtractedValueNotifier(this, initial);
 }

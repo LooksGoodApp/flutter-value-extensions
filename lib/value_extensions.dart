@@ -15,4 +15,5 @@ export 'src/utility/dispose_all.dart';
 export 'src/utility/setters.dart';
 export 'src/utility/subscribe.dart';
 
+/// Convenience mixin used to automatically export the package.
 mixin ImportValueExtensions {}
