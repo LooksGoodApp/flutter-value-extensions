@@ -18,7 +18,7 @@
 
 - Package now follows guidelines in terms of usage of the `part of` directive, it is now removed
 - Package now uses a custom linter 
-- Every transformer is now has full test coverage
+- Every transformer now has full test coverage
 
 ## [0.1.0] - 26.06.2021
 
