@@ -6,8 +6,8 @@ import 'package:value_extensions/value_extensions.dart';
 /// base [Listenable].
 ///
 /// The subscription is active only when the class that
-/// mixes [SubscriberWatcherMixin] in itself has listeners. It is cancelled when
-/// it looses the last subscriber, thus automatically managing the relationship
+/// mixes [SubscriberWatcherMixin] in itself has listeners. It is canceled when
+/// it loses the last subscriber, thus automatically managing the relationship
 /// between [Listenable]s
 mixin SubscriberWatcherMixin<A>
     on ValueNotifier<A>, SubscriptionsWatcherNotifierMixin {

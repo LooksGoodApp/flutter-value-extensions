@@ -6,6 +6,7 @@ import 'package:value_extensions/src/typedefs.dart';
 class _MappedValueNotifier<A, B> extends SubscriberNotifier<B> {
   @override
   final ValueListenable<A> listenable;
+
   final UnaryFunction<A, B> _transform;
 
   _MappedValueNotifier(this.listenable, this._transform)

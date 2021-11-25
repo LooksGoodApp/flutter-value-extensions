@@ -5,6 +5,7 @@ import 'package:value_extensions/src/transformers/combine_latest.dart';
 class Pair<A, B> {
   final A first;
   final B second;
+
   const Pair._(this.first, this.second);
 }
 
@@ -18,9 +19,8 @@ class Pair<A, B> {
 extension ValueListenableParallelExtension<A> on ValueListenable<A> {
   /// {@macro parallel_with.extension}
   ValueListenable<Pair<A, B>> parallelWith<B>(ValueListenable<B> other) =>
-      combineLatest(
+      combineLatest<B, Pair<A, B>>(
         other,
-        // ignore: avoid_types_on_closure_parameters
-        (first, B second) => Pair._(first, second),
+        (first, second) => Pair._(first, second),
       );
 }

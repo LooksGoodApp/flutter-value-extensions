@@ -10,11 +10,11 @@ class _FlatMappedValueNotifier<A, B> extends ValueNotifier<B>
   final ValueListenable<A> _baseNotifier;
   final FlatMapTransform<A, B> _transform;
 
-  Subscription? _baseNotifierSubscription;
-  Subscription? _currentSourceSubscription;
-
   _FlatMappedValueNotifier(this._baseNotifier, this._transform)
       : super(_transform(_baseNotifier.value).value);
+
+  Subscription? _baseNotifierSubscription;
+  Subscription? _currentSourceSubscription;
 
   ValueListenable<B> _currentNotifier() => _transform(_baseNotifier.value);
 

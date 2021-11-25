@@ -6,6 +6,7 @@ import 'package:value_extensions/src/typedefs.dart';
 class _FilteredValueNotifier<A> extends SubscriberNotifier<A> {
   @override
   final ValueListenable<A> listenable;
+
   final Predicate<A> _predicate;
 
   _FilteredValueNotifier(this.listenable, this._predicate)
@@ -23,7 +24,8 @@ class _FilteredValueNotifier<A> extends SubscriberNotifier<A> {
 /// Creates a new [ValueListenable] that filters base
 /// [ValueListenable]'s values using the give predicate.
 ///
-/// Note – initial listenable's value is assigned without using the predicate.
+/// Note – the initial listenable's value is assigned without using the
+/// predicate.
 /// {@endtemplate}
 extension ValueListenableWhereExtension<A> on ValueListenable<A> {
   /// {@macro where.extension}
