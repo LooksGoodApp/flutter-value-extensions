@@ -3,8 +3,8 @@
 ### Breaking changes
 
 - Every derived Object obtained from transformer extensions is now a `ValueListenable` instead of `ValueNotifier`.
-- Removed DisposeBag.
-- Removed DisposableBuilder.
+- Removed `DisposeBag`.
+- Removed `DisposableBuilder`.
 - Extract value Extension (`.extractValue(...)`) extensions now returns `StreamValueListenable`.
 - Set Extension (`.set(...)`) now takes a value instead of a function.
 
