@@ -1,20 +1,19 @@
 library value_extensions;
 
-import 'dart:async';
+export 'src/transformers/combine_latest.dart';
+export 'src/transformers/extract_value.dart';
+export 'src/transformers/flat_map.dart';
+export 'src/transformers/map.dart';
+export 'src/transformers/parallel_with.dart';
+export 'src/transformers/where.dart';
 
-import 'package:flutter/material.dart';
+export 'src/typedefs.dart';
 
-// Base
-part 'src/set.dart';
-part 'src/extract_value.dart';
-part 'src/subscribe.dart';
-part 'src/dispose_bag.dart';
-// Transformers
-part 'src/map.dart';
-part 'src/flat_map.dart';
-part 'src/where.dart';
-part 'src/combine_latest.dart';
-part 'src/parallel_with.dart';
-// UI
-part 'src/bind.dart';
-part 'src/disposable_builder.dart';
+export 'src/ui/bind.dart';
+
+export 'src/utility/dispose_all.dart';
+export 'src/utility/setters.dart';
+export 'src/utility/subscribe.dart';
+
+/// Convenience mixin used to automatically export the package.
+mixin ImportValueExtensions {}

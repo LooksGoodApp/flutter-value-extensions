@@ -1,67 +1,45 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:value_extensions/value_extensions.dart';
 
 class StateObject {
-  /// Object main dispose bag.
-  final _disposeBag = DisposeBag();
-
   /// Base private notifier that every other derives its value from.
   final _counter = ValueNotifier(0);
 
-  /// Derived notifiers through [map()] extension
-  late final ValueNotifier<Color> counterColor;
-  late final ValueNotifier<String> stringCounterValue;
+  late final StreamValueListenable<int> _secondsPassed =
+      _timer.extractValue(initial: 0);
 
   /// Base stream for conversion demonstration
-  final _timer = Stream.periodic(Duration(seconds: 1), (second) => second);
-
-  /// Converted stream through [extractValue()] extension
-  late final ValueNotifier<int> secondsPassed;
+  final _timer =
+      Stream.periodic(const Duration(seconds: 1), (second) => second);
 
   /// Derived subscription using [where()] and [subscribe()] extensions
   late final Subscription evenPrintSubscription;
 
   StateObject() {
-    _counter.disposedBy(_disposeBag);
-
-    counterColor = _counter
-        .map((value) => value.isEven ? Colors.red : Colors.blue)
-        .disposedBy(_disposeBag);
-
-    stringCounterValue =
-        _counter.map((value) => value.toString()).disposedBy(_disposeBag);
-
-    secondsPassed = _timer.extractValue(initial: 0).disposedBy(_disposeBag);
-
     evenPrintSubscription =
         _counter.where((value) => value.isEven).subscribe(print);
   }
 
-  void increment() => _counter.set((value) => value + 1);
+  ValueListenable<Color> get counterColor =>
+      _counter.map((value) => value.isEven ? Colors.red : Colors.blue);
+
+  ValueListenable<String> get stringCounterValue =>
+      _counter.map((value) => value.toString());
+
+  ValueListenable<int> get secondsPassed => _secondsPassed;
+
+  List<ChangeNotifier> get _disposable => [_counter, _secondsPassed];
+
+  void increment() => _counter.update((value) => value + 1);
 
   void dispose() {
-    if (!evenPrintSubscription.isCanceled) evenPrintSubscription.cancel();
-    _disposeBag.clear();
+    evenPrintSubscription.cancel();
+    _disposable.disposeAll();
     print("Disposed $this");
   }
-}
-
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text("Home")),
-        body: Center(
-          child: OutlinedButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CounterScreen()),
-            ),
-            child: Text("Navigate to Counter"),
-          ),
-        ),
-      );
 }
 
 class CounterScreen extends StatefulWidget {
@@ -87,31 +65,42 @@ class CounterScreenState extends State {
               state.secondsPassed.bind(
                 (seconds) => Text("Seconds passed: $seconds"),
               ),
-              SizedBox(height: 100),
-              DisposableBuilder(
-                builder: (context, disposeBag) => state.stringCounterValue
-                    .parallelWith(state.counterColor)
-                    .disposedBy(disposeBag)
-                    .bind(
-                      (text, color) => Text(
-                        text,
-                        style: TextStyle(color: color),
-                      ),
+              const SizedBox(height: 100),
+              state.stringCounterValue.parallelWith(state.counterColor).bind(
+                    (text, color) => Text(
+                      text,
+                      style: TextStyle(color: color),
                     ),
-              ),
+                  ),
               OutlinedButton(
                 onPressed: state.increment,
-                child: Text("Increment"),
+                child: const Text("Increment"),
               ),
               OutlinedButton(
                 onPressed: state.evenPrintSubscription.cancel,
-                child: Text("Cancel print"),
+                child: const Text("Cancel print"),
               ),
               OutlinedButton(
                 onPressed: Navigator.of(context).pop,
-                child: Text("Navigate back"),
+                child: const Text("Navigate back"),
               ),
             ],
+          ),
+        ),
+      );
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text("Home")),
+        body: Center(
+          child: OutlinedButton(
+            onPressed: () => Navigator.push<void>(
+              context,
+              MaterialPageRoute(builder: (context) => CounterScreen()),
+            ),
+            child: const Text("Navigate to Counter"),
           ),
         ),
       );
