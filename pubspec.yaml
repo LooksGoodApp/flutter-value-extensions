@@ -1,6 +1,6 @@
 name: value_extensions
 description: Set of extensions on ValueListenable that allows to use it as Streams in the Rx way.
-version: 0.1.0
+version: 0.2.0
 maintainer: Yakov Karpov (@purplenoodlesoop)
 
 homepage: https://github.com/LooksGoodApp/flutter-value-extensions
